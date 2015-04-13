@@ -1,0 +1,10 @@
+{
+    "type" : "record",
+    "name" : "AvroExample",
+    "namespace" : "com.dotomi.mapreduce.example.avro",
+    "doc" : "v1",
+    "fields" : [
+    	{"name"	: "word", "type" : "string", "doc" : "A counted word." },
+    	{"name" : "frequency", "type" : "long", "doc" : "frequency the word appears in the document." }
+   	]
+}
