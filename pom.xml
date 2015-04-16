@@ -18,39 +18,19 @@
 		<maven>3.0.2</maven>
 	</prerequisites>
 
-<!-- 
 	<scm>
-		<connection>scm:git:http://stash.cnvrmedia.net/scm/CM/dotomi-master.git</connection>
-		<developerConnection>scm:git:http://stash.cnvrmedia.net/scm/CM/dotomi-master.git</developerConnection>
-		<url>http://stash.cnvrmedia.net/projects/CM/repos/dotomi-master/browse</url>
+		<connection>scm:git:https://github.com/conversant/mara.git</connection>
+		<developerConnection>scm:git:https://github.com/conversant/mara.git</developerConnection>
+		<url>https://github.com/conversant/mara</url>
 		<tag>HEAD</tag>
 	</scm>
- -->
-
-	<issueManagement>
-		<system>JIRA</system>
-		<url>${issue.base.url}/</url>
-	</issueManagement>
-
-	<ciManagement>
-		<system>Bamboo</system>
-		<url>${ci.base.url}/</url>
-	</ciManagement>
  
+  	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/conversant/mara/issues</url>
+	</issueManagement>
+  
 	<properties>
-		<!-- Base URLs-->
-		<issue.base.url>http://jira.cnvrmedia.net</issue.base.url>
-		<scm.base.url>scm:git:http://stash.cnvrmedia.net/scm</scm.base.url>
-		<scm.view.base.url>http://stash.cnvrmedia.net/projects</scm.view.base.url>
-		<ci.base.url>http://builds.cnvrmedia.net/browse</ci.base.url>
-
-		<!-- Packaging Project Properties -->
-		<cli.build>false</cli.build>
-		<modules.pattern>com.conversantmedia:*-module*</modules.pattern>
-		<res.build>false</res.build>
-		<war.build>false</war.build>
-
-		<context.name />
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -64,7 +44,6 @@
 		<aspectj.compliance.level>1.7</aspectj.compliance.level>
 		<powermock.version>1.5.4</powermock.version>
 		<avro.version>1.7.6</avro.version>
-
 	</properties>
 
 	<dependencyManagement>
@@ -420,11 +399,6 @@
 					<configuration>
 						<tagNameFormat>@{project.version}</tagNameFormat>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.1</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
