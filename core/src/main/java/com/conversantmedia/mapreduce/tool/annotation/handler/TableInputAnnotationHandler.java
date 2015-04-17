@@ -62,27 +62,8 @@ public class TableInputAnnotationHandler extends AnnotationHandlerBase {
 			// Add dependencies
 			TableMapReduceUtil.addDependencyJars(job);
 
-			// Setup the input table
-			Object tableNameObj = this.evaluateExpression(tableInput.table());
-			String tableName;
-			if (tableNameObj instanceof byte[]) {
-				tableName = Bytes.toString((byte[])tableNameObj);
-			}
-			else {
-				tableName = tableNameObj.toString();
-			}
-
-			Scan scan = new Scan();
-			String scanProperty = tableInput.scanProperty();
-			if (StringUtils.isNotBlank(scanProperty)) {
-				if (!StringUtils.startsWith(scanProperty, "${")) {
-					scanProperty = "${" + scanProperty + "}";
-				}
-				try {
-					scan = (Scan)this.evaluateExpression(scanProperty);
-				} catch (Exception e) { // ignore and use default
-				}
-			}
+			String tableName = getTableName(tableInput);
+			Scan scan = getScan(tableInput);
 
 			job.setInputFormatClass(TableInputFormat.class);
 			conf.set(TableInputFormat.INPUT_TABLE, tableName);
@@ -91,6 +72,34 @@ public class TableInputAnnotationHandler extends AnnotationHandlerBase {
 		} catch (IOException e) {
 			throw new ToolException(e);
 		}
+	}
+
+	protected Scan getScan(TableInput tableInput) {
+		Scan scan = new Scan();
+		String scanProperty = tableInput.scanProperty();
+		if (StringUtils.isNotBlank(scanProperty)) {
+			if (!StringUtils.startsWith(scanProperty, "${")) {
+				scanProperty = "${" + scanProperty + "}";
+			}
+			try {
+				scan = (Scan)this.evaluateExpression(scanProperty);
+			} catch (Exception e) { // ignore and use default
+			}
+		}
+		return scan;
+	}
+
+	protected String getTableName(TableInput tableInput) throws ToolException {
+		// Setup the input table
+		Object tableNameObj = this.evaluateExpression(tableInput.table());
+		String tableName;
+		if (tableNameObj instanceof byte[]) {
+			tableName = Bytes.toString((byte[])tableNameObj);
+		}
+		else {
+			tableName = tableNameObj.toString();
+		}
+		return tableName;
 	}
 
 	/**

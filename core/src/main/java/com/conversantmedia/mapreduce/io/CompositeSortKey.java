@@ -51,6 +51,10 @@ public class CompositeSortKey<G extends WritableComparable, S extends WritableCo
 
 	public CompositeSortKey() {}
 
+    public CompositeSortKey(CompositeSortKey<G, S> copyFrom) {
+        this(copyFrom.groupKey, copyFrom.sortKey);
+    }
+	
 	public CompositeSortKey(G groupKey, S sortKey) {
 		this.groupKey = groupKey;
 		this.sortKey = sortKey;

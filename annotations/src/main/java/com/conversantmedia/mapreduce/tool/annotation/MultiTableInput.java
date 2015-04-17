@@ -38,10 +38,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface MultiTableInput {
 
-	String table() default "${context.input}";
-
-	String scanProperty() default "scan";
-
-	// RESERVED for future use
-	Scanner scan() default @Scanner;
+	TableInput[] value();
 }

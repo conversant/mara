@@ -42,6 +42,11 @@ public @interface TableInput {
 
 	String scanProperty() default "scan";
 
+	// Alternative for setting mapper here instead of separate.
+	// May be needed in future if we allow separate mappers 
+	// for each table input in a MultiTableInput.
+	MapperInfo mapper() default @MapperInfo;
+	
 	// RESERVED for future use
 	Scanner scan() default @Scanner;
 }
