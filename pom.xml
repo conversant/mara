@@ -3,10 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.conversantmedia</groupId>
 	<artifactId>mara-parent</artifactId>
-	<version>0.9-SNAPSHOT</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
-	<name>mara-parent</name>
+	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Mara - Java Annotations Framework for MapReduce on Hadoop</description>
+	<url>https://github.com/conversant/mara</url>
+
 	<inceptionYear>2015</inceptionYear>
 
 	<organization>
@@ -14,9 +16,21 @@
 		<url>http://www.conversantmedia.com</url>
 	</organization>
 
-	<prerequisites>
-		<maven>3.0.2</maven>
-	</prerequisites>
+	<developers>
+		<developer>
+			<name>Patrick Jaromin</name>
+			<email>pjaromin@conversantmedia.com</email>
+			<organization>Conversant, LLC</organization>
+			<organizationUrl>http://www.conversantmedia.com</organizationUrl>
+		</developer>
+	</developers>
+
+	<licenses>
+		<license>
+			<name>The Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
 
 	<scm>
 		<connection>scm:git:https://github.com/conversant/mara.git</connection>
@@ -24,12 +38,16 @@
 		<url>https://github.com/conversant/mara</url>
 		<tag>HEAD</tag>
 	</scm>
- 
+
   	<issueManagement>
 		<system>GitHub</system>
 		<url>https://github.com/conversant/mara/issues</url>
 	</issueManagement>
-  
+
+	<prerequisites>
+		<maven>3.0.2</maven>
+	</prerequisites>
+   
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -368,7 +386,7 @@
 						<execution>
 							<id>attach-sources</id>
 							<goals>
-								<goal>jar</goal>
+								<goal>jar-no-fork</goal>
 							</goals>
 						</execution>
 					</executions>
@@ -431,14 +449,36 @@
 						</reportPlugins>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.3</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>ossrh</serverId>
+						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+						<autoReleaseAfterClose>true</autoReleaseAfterClose>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.5</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<artifactId>maven-site-plugin</artifactId>
+				</plugin>
 			</plugins>
 		</pluginManagement>
-
-		<plugins>
-			<plugin>
-				<artifactId>maven-site-plugin</artifactId>
-			</plugin>
-		</plugins>
 	</build>
 	<reporting>
 		<plugins>
@@ -477,6 +517,12 @@
 					</plugin>
 					<plugin>
 						<artifactId>maven-source-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<artifactId>maven-site-plugin</artifactId>
 					</plugin>
 				</plugins>
 			</build>

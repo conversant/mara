@@ -4,13 +4,14 @@
 
     <artifactId>mara-examples</artifactId>
     <packaging>jar</packaging>
-    <name>Mara Framework Examples</name>
-    <description />
+    <name>${project.groupId}:${project.artifactId}</name>
+	<description>Mara - Java Annotations Framework for MapReduce on Hadoop</description>
+	<url>https://github.com/conversant/mara</url>
 
 	<parent>
 		<groupId>com.conversantmedia</groupId>
 		<artifactId>mara-parent</artifactId>
-		<version>0.9-SNAPSHOT</version>
+		<version>0.9.1-SNAPSHOT</version>
 	</parent>
 
 	<properties>
