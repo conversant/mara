@@ -1,7 +1,1 @@
-com.conversantmedia.mapreduce.input
-com.conversantmedia.mapreduce.io
-com.conversantmedia.mapreduce.io.avro
-com.conversantmedia.mapreduce.output
-com.conversantmedia.mapreduce.tool
-com.conversantmedia.mapreduce.tool.annotation.handler
-com.conversantmedia.mapreduce.tool.event
+com.conversantmedia.mapreduce.mrunit
