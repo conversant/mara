@@ -1,15 +1,5 @@
 com.conversantmedia.mapreduce
-com.conversantmedia.mapreduce.example
-com.conversantmedia.mapreduce.example.avro
-com.conversantmedia.mapreduce.example.distribute
 com.conversantmedia.mapreduce.exception
-com.conversantmedia.mapreduce.input
-com.conversantmedia.mapreduce.io
-com.conversantmedia.mapreduce.io.avro
-com.conversantmedia.mapreduce.mrunit
-com.conversantmedia.mapreduce.output
 com.conversantmedia.mapreduce.tool
 com.conversantmedia.mapreduce.tool.annotation
-com.conversantmedia.mapreduce.tool.annotation.handler
 com.conversantmedia.mapreduce.tool.event
-com.dotomi.mapreduce.example.avro
