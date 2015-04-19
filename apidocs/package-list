@@ -1,1 +1,4 @@
-com.conversantmedia.mapreduce.mrunit
+com.conversantmedia.mapreduce.example
+com.conversantmedia.mapreduce.example.avro
+com.conversantmedia.mapreduce.example.distribute
+com.dotomi.mapreduce.example.avro
