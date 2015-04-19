@@ -1,5 +1,7 @@
-com.conversantmedia.mapreduce
-com.conversantmedia.mapreduce.exception
+com.conversantmedia.mapreduce.input
+com.conversantmedia.mapreduce.io
+com.conversantmedia.mapreduce.io.avro
+com.conversantmedia.mapreduce.output
 com.conversantmedia.mapreduce.tool
-com.conversantmedia.mapreduce.tool.annotation
+com.conversantmedia.mapreduce.tool.annotation.handler
 com.conversantmedia.mapreduce.tool.event
