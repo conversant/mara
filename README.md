@@ -1,5 +1,5 @@
 <img src="https://cloud.githubusercontent.com/assets/3874504/7446254/4280ae1e-f198-11e4-8b9d-6251eefd2f23.png" height="180"/>
-# Mara - Annotations for MapReduce
+# Annotations for MapReduce
 
 ## What is Mara? 
 Mara is a _design_ and _implementation_ for developing Hadoop MapReduce jobs in Java. Mara grew out of the need to simplify and standardize the process in use at Conversant.
