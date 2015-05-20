@@ -51,7 +51,7 @@ public class RunJobTest {
 	public void testScanPackages_Resource() {
 		String packages = "package1,package2,package3";	
 		try {
-			String[] result = RunJob.getBasePackagesToScan();
+			String[] result = RunJob.getBasePackagesToScanForDrivers();
 			
 			assertNotNull(result);
 			assertThat(result.length, equalTo(3));
@@ -65,11 +65,11 @@ public class RunJobTest {
 	
 	@Test
 	public void testScanPackages_SystemProperty() {
-		String packages = "package1,package2,package3";
-		System.setProperty(RunJob.SYSPROP_SCAN_PACKAGES, packages);
+		String packages = "package4,package5,package6";
+		System.setProperty(RunJob.SYSPROP_DRIVER_SCAN_PACKAGES, packages);
 		
 		try {
-			String[] result = RunJob.getBasePackagesToScan();
+			String[] result = RunJob.getBasePackagesToScanForDrivers();
 			
 			assertNotNull(result);
 			assertThat(result.length, equalTo(3));
@@ -105,7 +105,7 @@ public class RunJobTest {
 		runJob = new RunJob();
 		
 		// Ensure our system property is unset before each run
-		System.clearProperty(RunJob.SYSPROP_SCAN_PACKAGES);
+		System.clearProperty(RunJob.SYSPROP_DRIVER_SCAN_PACKAGES);
 	}
 	
 	@After 

@@ -15,6 +15,8 @@ import com.conversantmedia.mapreduce.tool.annotation.JobInfo;
 /**
  * This is a special handler designed to setup a default 
  * {@link InputFormat} for the job if none is specified.
+ * This is not a @Service because we don't want it discovered
+ * and wired in automatically.
  * 
  */
 public class DefaultInputAnnotationHandler extends FileInputAnnotationHandler {

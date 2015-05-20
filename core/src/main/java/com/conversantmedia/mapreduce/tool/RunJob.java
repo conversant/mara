@@ -48,6 +48,7 @@ import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 import org.reflections.Reflections;
+import org.reflections.ReflectionsException;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Service;
 
@@ -74,23 +75,36 @@ public class RunJob {
 
 	/**
 	 * System property for overriding base packages to scan for 
+	 * mara components - i.e. annotation handlers, etc.
+	 */
+	public static final String SYSPROP_MARA_SCAN_PACKAGES = "mara.components.packages";
+
+	/**
+	 * System property for overriding base packages to scan for
 	 * {@literal @} Driver annotations.
 	 */
-	public static final String SYSPROP_SCAN_PACKAGES = "mara.packages";
+	public static final String SYSPROP_DRIVER_SCAN_PACKAGES = "mara.drivers.packages";
 
-	public static final String RESOURCE_SCAN_PACKAGES
-			= RunJob.class.getPackage().getName().toString().replace(".", "/") + "/base-packages";	
+	/**
+	 * Packages to scan for @Drivers
+	 */
+	public static final String RESOURCE_DRIVER_SCAN_PACKAGES = "META-INF/mara/package-scan";
 
 	public static void main(String[] args) throws ToolException, IOException {
 
 		// Get the base packages from the classpath resource
-		String[] scanPackages = getBasePackagesToScan();
+		String[] scanPackages = getBasePackagesToScanForDrivers();
 
 		// Initialize the reflections object
 		Reflections reflections = initReflections((Object[])scanPackages);
 
 		// Search the classpath for Tool and Driver annotations
 		Map<String, DriverMeta> idMap = findAllDrivers(reflections);
+
+		if (idMap.isEmpty()) {
+			System.out.printf("No drivers found in package(s) [%s]\n",StringUtils.join(scanPackages, ","));
+			System.exit(0);
+		}
 
 		// Expects the first argument to be the id of the
 		// tool to run. Otherwise list them all:
@@ -167,7 +181,7 @@ public class RunJob {
 		// Initialize our annotations handlers
 		try {
 			MaraAnnotationUtil annotationUtil = MaraAnnotationUtil.instance();
-			Reflections reflections = initReflections((Object[])DEFAULT_SCAN_PACKAGES);
+			Reflections reflections = initReflections(getBasePackagesToScanForComponents());
 			Set<Class<?>> handlerClasses = reflections.getTypesAnnotatedWith(Service.class);
 			for (Class<?> handlerClass : handlerClasses) {
 				if (MaraAnnotationHandler.class.isAssignableFrom(handlerClass)) {
@@ -183,13 +197,26 @@ public class RunJob {
 			annotationUtil.registerAnnotationHandler(new DefaultInputAnnotationHandler(), driver);
 			annotationUtil.registerAnnotationHandler(new DefaultOutputAnnotationHandler(), driver);
 
-		} catch (InstantiationException | IllegalAccessException e) {
+		} catch (InstantiationException | IllegalAccessException | IOException e) {
 			throw new ToolException(e);
 		}
 	}
 
-	protected static String[] getBasePackagesToScan() throws IOException {
-		String sysPropScanPackages = System.getProperty(SYSPROP_SCAN_PACKAGES); 
+	protected static String[] getBasePackagesToScanForDrivers() throws IOException {
+		return getBasePackagesToScan(SYSPROP_DRIVER_SCAN_PACKAGES, RESOURCE_DRIVER_SCAN_PACKAGES);
+	}
+
+	protected static String[] getBasePackagesToScanForComponents() throws IOException {
+		return getBasePackagesToScan(SYSPROP_MARA_SCAN_PACKAGES, null);
+	}
+	/**
+	 * Retrieves the list of packages to scan for the specified system property
+	 * @param sysProp		The system property that overrides
+	 * @return				the list of packages to scan
+	 * @throws IOException 	if we fail to load a system resource
+	 */
+	protected static String[] getBasePackagesToScan(String sysProp, String resource) throws IOException {
+		String sysPropScanPackages = System.getProperty(sysProp);
 		if (StringUtils.isNotBlank(sysPropScanPackages)) {
 			// The system property is set, use it.
 			return StringUtils.split(sysPropScanPackages, ',');
@@ -199,7 +226,9 @@ public class RunJob {
 			List<String> packages = new ArrayList<String>();
 			InputStream resourceStream = null;
 			try {
-				resourceStream = RunJob.class.getClassLoader().getResourceAsStream(RESOURCE_SCAN_PACKAGES);
+				if (resource != null) {
+					resourceStream = RunJob.class.getClassLoader().getResourceAsStream(resource);
+				}
 				if (resourceStream != null) {
 					packages = IOUtils.readLines(resourceStream);
 				}
@@ -213,12 +242,10 @@ public class RunJob {
 			
 			return packages.toArray(new String[]{});
 		}
-		
 	}
 
 	protected static Reflections initReflections(Object...packages) {
-		Reflections reflections = new Reflections(packages);
-		return reflections;
+		return new Reflections(packages);
 	}
 
 	@SuppressWarnings("unchecked")
