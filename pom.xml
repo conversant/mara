@@ -58,7 +58,16 @@
 	<prerequisites>
 		<maven>3.0.2</maven>
 	</prerequisites>
-   
+
+	<repositories>
+		<repository>
+			<id>mapr-releases</id>
+			<url>http://repository.mapr.com/maven/</url>
+			<snapshots><enabled>false</enabled></snapshots>
+			<releases><enabled>true</enabled></releases>
+		</repository>
+	</repositories>
+
 	<properties>
 		<jdk.version>1.7</jdk.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -67,7 +76,7 @@
 		<license.name>apache_v2</license.name>
 		
 		<hadoop.version>2.6.0</hadoop.version>
-		<hbase.version>0.96.1.1-hadoop2</hbase.version>
+		<hbase.version>0.94.17-mapr-1403-m7-3.1.1</hbase.version>
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<aspectj.version>1.8.2</aspectj.version>
 		<aspectj.compliance.level>1.7</aspectj.compliance.level>
@@ -91,6 +100,7 @@
 				<version>${hadoop.version}</version>
 				<scope>provided</scope>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-yarn-api</artifactId>
@@ -99,14 +109,7 @@
 
 			<dependency>
 				<groupId>org.apache.hbase</groupId>
-				<artifactId>hbase-client</artifactId>
-				<version>${hbase.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.apache.hbase</groupId>
-				<artifactId>hbase-hadoop2-compat</artifactId>
+				<artifactId>hbase</artifactId>
 				<version>${hbase.version}</version>
 				<scope>provided</scope>
 			</dependency>
