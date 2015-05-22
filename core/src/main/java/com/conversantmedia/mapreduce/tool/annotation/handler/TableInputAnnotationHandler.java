@@ -21,24 +21,23 @@ package com.conversantmedia.mapreduce.tool.annotation.handler;
  */
 
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-
+import com.conversantmedia.mapreduce.tool.ToolException;
+import com.conversantmedia.mapreduce.tool.annotation.TableInput;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.mapreduce.TableInputFormat;
 import org.apache.hadoop.hbase.mapreduce.TableMapReduceUtil;
-import org.apache.hadoop.hbase.protobuf.ProtobufUtil;
-import org.apache.hadoop.hbase.protobuf.generated.ClientProtos;
 import org.apache.hadoop.hbase.util.Base64;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.hadoop.mapreduce.Job;
 import org.springframework.stereotype.Service;
 
-import com.conversantmedia.mapreduce.tool.ToolException;
-import com.conversantmedia.mapreduce.tool.annotation.TableInput;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
 
 @Service
 public class TableInputAnnotationHandler extends AnnotationHandlerBase {
@@ -112,7 +111,9 @@ public class TableInputAnnotationHandler extends AnnotationHandlerBase {
 	 * @throws IOException	if encoding to base64 bytes fails
 	 */
 	protected String convertScanToString(Scan scan) throws IOException {
-		ClientProtos.Scan proto = ProtobufUtil.toScan(scan);
-	    return Base64.encodeBytes(proto.toByteArray());
+		ByteArrayOutputStream out = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(out);
+		scan.write(dos);
+		return Base64.encodeBytes(out.toByteArray());
 	}
 }
