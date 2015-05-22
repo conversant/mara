@@ -41,6 +41,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.jar.Manifest;
 
+import com.conversantmedia.mapreduce.tool.annotation.handler.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -55,10 +56,6 @@ import org.springframework.stereotype.Service;
 import com.conversantmedia.mapreduce.tool.annotation.Driver;
 import com.conversantmedia.mapreduce.tool.annotation.Hidden;
 import com.conversantmedia.mapreduce.tool.annotation.Tool;
-import com.conversantmedia.mapreduce.tool.annotation.handler.DefaultInputAnnotationHandler;
-import com.conversantmedia.mapreduce.tool.annotation.handler.DefaultOutputAnnotationHandler;
-import com.conversantmedia.mapreduce.tool.annotation.handler.MaraAnnotationUtil;
-import com.conversantmedia.mapreduce.tool.annotation.handler.MaraAnnotationHandler;
 import com.conversantmedia.mapreduce.tool.event.AnnotatedToolListener;
 import com.conversantmedia.mapreduce.tool.event.ToolListener;
 
@@ -67,17 +64,6 @@ import com.conversantmedia.mapreduce.tool.event.ToolListener;
  *
  */
 public class RunJob {
-
-	/**
-	 * Default base packages to search if not overridden by a base-packages file.
-	 */
-	public static final String[] DEFAULT_SCAN_PACKAGES = new String[]{"com.conversantmedia", "net.cnvrmedia", "com.dotomi"};
-
-	/**
-	 * System property for overriding base packages to scan for 
-	 * mara components - i.e. annotation handlers, etc.
-	 */
-	public static final String SYSPROP_MARA_SCAN_PACKAGES = "mara.components.packages";
 
 	/**
 	 * System property for overriding base packages to scan for
@@ -150,7 +136,6 @@ public class RunJob {
 				driver = (BaseTool) driverClass.newInstance();
 			} else {
 				driver = new AnnotatedTool(driverClass.newInstance());
-				initializeDriverResources((AnnotatedTool)driver);
 				if (driverMeta.listener[0] != Tool.NULLLISTENER.class) {
 					for (Class<? extends ToolListener> listenerClass : driverMeta.listener) {
 						ToolListener listener = listenerClass.newInstance();
@@ -170,78 +155,8 @@ public class RunJob {
 		}
 	}
 
-	/**
-	 * Performs resource injection in absence of Spring (which we're not prepared
-	 * to add just yet.)
-	 * 
-	 * @param driver			the driver instance
-	 * @throws ToolException	if the driver resources cannot be initialized
-	 */
-	private static void initializeDriverResources(AnnotatedTool driver) throws ToolException {
-		// Initialize our annotations handlers
-		try {
-			MaraAnnotationUtil annotationUtil = MaraAnnotationUtil.instance();
-			Reflections reflections = initReflections(getBasePackagesToScanForComponents());
-			Set<Class<?>> handlerClasses = reflections.getTypesAnnotatedWith(Service.class);
-			for (Class<?> handlerClass : handlerClasses) {
-				if (MaraAnnotationHandler.class.isAssignableFrom(handlerClass)) {
-					MaraAnnotationHandler handler = (MaraAnnotationHandler) handlerClass.newInstance();
-					annotationUtil.registerAnnotationHandler(handler, driver);
-				}
-			}
-			
-			// Register our default annotation handlers last. The order of execution 
-			// is determined by the order in which they're added.
-			// TODO Should we develop a method of explicit ordering, priority so the
-			// default handlers always trigger last through normal means (@Service annotation)
-			annotationUtil.registerAnnotationHandler(new DefaultInputAnnotationHandler(), driver);
-			annotationUtil.registerAnnotationHandler(new DefaultOutputAnnotationHandler(), driver);
-
-		} catch (InstantiationException | IllegalAccessException | IOException e) {
-			throw new ToolException(e);
-		}
-	}
-
 	protected static String[] getBasePackagesToScanForDrivers() throws IOException {
-		return getBasePackagesToScan(SYSPROP_DRIVER_SCAN_PACKAGES, RESOURCE_DRIVER_SCAN_PACKAGES);
-	}
-
-	protected static String[] getBasePackagesToScanForComponents() throws IOException {
-		return getBasePackagesToScan(SYSPROP_MARA_SCAN_PACKAGES, null);
-	}
-	/**
-	 * Retrieves the list of packages to scan for the specified system property
-	 * @param sysProp		The system property that overrides
-	 * @return				the list of packages to scan
-	 * @throws IOException 	if we fail to load a system resource
-	 */
-	protected static String[] getBasePackagesToScan(String sysProp, String resource) throws IOException {
-		String sysPropScanPackages = System.getProperty(sysProp);
-		if (StringUtils.isNotBlank(sysPropScanPackages)) {
-			// The system property is set, use it.
-			return StringUtils.split(sysPropScanPackages, ',');
-		}
-		else {
-			// Search the classpath for the properties file. If not, use default
-			List<String> packages = new ArrayList<String>();
-			InputStream resourceStream = null;
-			try {
-				if (resource != null) {
-					resourceStream = RunJob.class.getClassLoader().getResourceAsStream(resource);
-				}
-				if (resourceStream != null) {
-					packages = IOUtils.readLines(resourceStream);
-				}
-				else {
-					packages = Arrays.asList(DEFAULT_SCAN_PACKAGES);
-				}
-			}
-			finally {
-				IOUtils.closeQuietly(resourceStream);
-			}
-			
-			return packages.toArray(new String[]{});
-		}
+		return MaraAnnotationUtil.INSTANCE.getBasePackagesToScan(SYSPROP_DRIVER_SCAN_PACKAGES, RESOURCE_DRIVER_SCAN_PACKAGES);
 	}
 
 	protected static Reflections initReflections(Object...packages) {
@@ -262,7 +177,7 @@ public class RunJob {
 			String version = versionForDriverClass(c, d.version());
 			String driverId = d.value();
 			if (StringUtils.isBlank(driverId)) {
-				driverId = MaraAnnotationUtil.instance().defaultDriverIdForClass(c);
+				driverId = MaraAnnotationUtil.INSTANCE.defaultDriverIdForClass(c);
 			}
 			DriverMeta meta = new DriverMeta(driverId, d.description(), version, c, d.listener());
 			idMap.put(driverId, meta);
@@ -277,7 +192,7 @@ public class RunJob {
 			String version = versionForDriverClass(c, t.version());
 			String toolId = t.value();
 			if (StringUtils.isBlank(toolId)) {
-				toolId = MaraAnnotationUtil.instance().defaultDriverIdForClass(c);
+				toolId = MaraAnnotationUtil.INSTANCE.defaultDriverIdForClass(c);
 			}
 			DriverMeta meta = new DriverMeta(toolId, t.description(), version, c, t.listener());
 			idMap.put(toolId, meta);

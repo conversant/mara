@@ -34,6 +34,11 @@ public abstract class AnnotationHandlerBase implements MaraAnnotationHandler {
 		this.tool = tool;
 	}
 
+	@Override
+	public boolean runLast() {
+		return false;
+	}
+
 	protected AnnotatedTool getAnnotatedTool() {
 		return this.tool;
 	}

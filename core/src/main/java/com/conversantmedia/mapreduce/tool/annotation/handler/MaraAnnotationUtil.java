@@ -22,6 +22,7 @@ package com.conversantmedia.mapreduce.tool.annotation.handler;
 
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -36,6 +37,7 @@ import java.util.Set;
 
 import javax.annotation.Resource;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.apache.hadoop.mapreduce.Job;
@@ -47,21 +49,19 @@ import com.conversantmedia.mapreduce.tool.ExpressionEvaluator;
 import com.conversantmedia.mapreduce.tool.ToolException;
 import com.conversantmedia.mapreduce.tool.annotation.JobInfo;
 
-public class MaraAnnotationUtil {
+public enum MaraAnnotationUtil {
+
+	INSTANCE;
+
+	/**
+	 * Default base packages to search if not overridden by a base-packages file.
+	 */
+	public static final String[] DEFAULT_SCAN_PACKAGES = new String[]{"com.conversantmedia", "net.cnvrmedia", "com.dotomi"};
 
 	private static MaraAnnotationUtil instance;
 
 	@Resource
 	private Set<MaraAnnotationHandler> annotationHandlers;
-
-	private MaraAnnotationUtil() {}
-
-	public static final MaraAnnotationUtil instance() {
-		if (instance == null) {
-			instance = new MaraAnnotationUtil();
-		}
-		return instance;
-	}
 
 	public void registerAnnotationHandler(MaraAnnotationHandler handler, AnnotatedTool driver) throws ToolException {
 		if (this.annotationHandlers == null) {
@@ -331,5 +331,40 @@ public class MaraAnnotationUtil {
 			rawTypes[i] = t;
 		}
 		return rawTypes;
+	}
+
+	/**
+	 * Retrieves the list of packages to scan for the specified system property
+	 * @param sysProp		The system property that overrides
+	 * @return				the list of packages to scan
+	 * @throws IOException 	if we fail to load a system resource
+	 */
+	public String[] getBasePackagesToScan(String sysProp, String resource) throws IOException {
+		String sysPropScanPackages = System.getProperty(sysProp);
+		if (StringUtils.isNotBlank(sysPropScanPackages)) {
+			// The system property is set, use it.
+			return StringUtils.split(sysPropScanPackages, ',');
+		}
+		else {
+			// Search the classpath for the properties file. If not, use default
+			List<String> packages = new ArrayList<String>();
+			InputStream resourceStream = null;
+			try {
+				if (resource != null) {
+					resourceStream = this.getClass().getClassLoader().getResourceAsStream(resource);
+				}
+				if (resourceStream != null) {
+					packages = IOUtils.readLines(resourceStream);
+				}
+				else {
+					packages = Arrays.asList(DEFAULT_SCAN_PACKAGES);
+				}
+			}
+			finally {
+				IOUtils.closeQuietly(resourceStream);
+			}
+
+			return packages.toArray(new String[]{});
+		}
 	}
 }

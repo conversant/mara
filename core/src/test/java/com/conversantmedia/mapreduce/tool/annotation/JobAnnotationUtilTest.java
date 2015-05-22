@@ -89,7 +89,7 @@ public class JobAnnotationUtilTest {
 
 	@Before
 	public void setup() throws ToolException {
-		annotationUtil = MaraAnnotationUtil.instance();
+		annotationUtil = MaraAnnotationUtil.INSTANCE;
 		// Initialize our annotations handlers
 
 		Configuration conf = new Configuration();

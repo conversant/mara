@@ -144,7 +144,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 		when(job.getConfiguration()).thenReturn(config);
 
 		// AvroJobInfo
-		Field avroField = MaraAnnotationUtil.instance().findAnnotatedField(driverClass, AvroJobInfo.class);
+		Field avroField = MaraAnnotationUtil.INSTANCE.findAnnotatedField(driverClass, AvroJobInfo.class);
 		if (avroField != null) {
 			AvroJobInfoAnnotationHandler avroHandler = new AvroJobInfoAnnotationHandler();
 			AvroJobInfo avroAnnotation = avroField.getAnnotation(AvroJobInfo.class);
@@ -210,7 +210,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 	}
 
 	protected Class<?> getContextClass(Class<?> driverClass) {
-		Field field = MaraAnnotationUtil.instance().findAnnotatedField(driverClass, DriverContext.class, ToolContext.class);
+		Field field = MaraAnnotationUtil.INSTANCE.findAnnotatedField(driverClass, DriverContext.class, ToolContext.class);
 		if (field != null) {
 			return (Class)field.getType();
 		}
@@ -222,7 +222,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 		if (MaraAnnotationUtil.hasAnyAnnotation(componentClass,
 				Service.class, MapperService.class, ReducerService.class)) {
 			NamedOutputAnnotationHandler handler = new NamedOutputAnnotationHandler();
-			List<Field> fields = MaraAnnotationUtil.instance().findAnnotatedFields(componentClass, NamedOutput.class);
+			List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(componentClass, NamedOutput.class);
 			for (Field field : fields) {
 				String[] names = handler.getNames(field.getAnnotation(NamedOutput.class));
 				for (String name : names) {
@@ -236,7 +236,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 			}
 
 			AvroNamedOutputAnnotationHandler avroHandler = new AvroNamedOutputAnnotationHandler();
-			fields = MaraAnnotationUtil.instance().findAnnotatedFields(componentClass, AvroNamedOutput.class);
+			fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(componentClass, AvroNamedOutput.class);
 			for (Field field : fields) {
 				AvroNamedOutput avroNamedOutputAnnotation = field.getAnnotation(AvroNamedOutput.class);
 				String[] names = avroHandler.getNames(avroNamedOutputAnnotation);
@@ -258,7 +258,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 	protected Mapper getMapperFor(Class<?> driverClass)
 			throws InstantiationException, IllegalAccessException {
 		Mapper mapper = null;
-		Field jobField = MaraAnnotationUtil.instance().findAnnotatedField(driverClass, JobInfo.class);
+		Field jobField = MaraAnnotationUtil.INSTANCE.findAnnotatedField(driverClass, JobInfo.class);
 		MapperInfo info = jobField.getAnnotation(MapperInfo.class);
 		if (info != null && info.value() != null) {
 			Class<? extends Mapper> mapperClass = info.value();
@@ -270,7 +270,7 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 	protected Reducer getReducerFor(Class<?> driverClass)
 			throws InstantiationException, IllegalAccessException {
 		Reducer reducer = null;
-		Field jobField = MaraAnnotationUtil.instance().findAnnotatedField(driverClass, JobInfo.class);
+		Field jobField = MaraAnnotationUtil.INSTANCE.findAnnotatedField(driverClass, JobInfo.class);
 		ReducerInfo info = jobField.getAnnotation(ReducerInfo.class);
 		if (info != null && info.value() != null) {
 			Class<? extends Reducer> reducerClass = info.value();

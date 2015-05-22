@@ -28,6 +28,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.conversantmedia.mapreduce.tool.annotation.handler.AnnotationHandlerProvider;
+import com.conversantmedia.mapreduce.tool.annotation.handler.MaraAnnotationHandler;
 import org.apache.commons.cli.ParseException;
 import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
@@ -50,6 +52,10 @@ import com.conversantmedia.mapreduce.tool.annotation.handler.MaraAnnotationUtil;
  *
  */
 public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
+
+	public static final String SYSPROP_ANNOTATION_HANDLER_PROVIDER = "mara.annotation.handler.provider";
+
+	private static final String DEFAULT_ANNOTATION_HANDLER_PROVIDER = "com.conversantmedia.mapreduce.tool.annotation.handler.ReflectionAnnotationHandlerProvider";
 
 	// The user's annotated tool bean
 	private Object tool;
@@ -82,7 +88,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 		this.tool = tool;
 
 		// Find annotated fields and methods...
-		MaraAnnotationUtil annotationUtil = MaraAnnotationUtil.instance();
+		MaraAnnotationUtil annotationUtil = MaraAnnotationUtil.INSTANCE;
 		this.contextField = annotationUtil.findAnnotatedField(tool.getClass(),
 				ToolContext.class, DriverContext.class);
 		this.jobField = annotationUtil.findAnnotatedField(tool.getClass(), JobInfo.class);
@@ -109,6 +115,10 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 			for (Method m : methods) {
 				m.invoke(this.tool);
 			}
+
+			// Initialize our annotations handlers
+			initializeAnnotationHandlers();
+
 		} catch (InvocationTargetException e) {
 			if (e.getCause() instanceof ParseException) {
 				// If any of these throws a ParseException, treat pass
@@ -118,6 +128,19 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 			}
 			throw new ToolException(findRootException(e.getCause()));
 		} catch (IllegalAccessException | IllegalArgumentException e) {
+			throw new ToolException(e);
+		}
+	}
+
+	private void initializeAnnotationHandlers() throws ToolException {
+		try {
+			String providerClassName = System.getProperty(SYSPROP_ANNOTATION_HANDLER_PROVIDER, DEFAULT_ANNOTATION_HANDLER_PROVIDER);
+			AnnotationHandlerProvider provider = (AnnotationHandlerProvider) Class.forName(providerClassName).newInstance();
+			MaraAnnotationUtil annotationUtil = MaraAnnotationUtil.INSTANCE;
+			for (MaraAnnotationHandler handler : provider.handlers()) {
+				annotationUtil.registerAnnotationHandler(handler, this);
+			}
+		} catch (InstantiationException | IllegalAccessException | ClassNotFoundException  e) {
 			throw new ToolException(e);
 		}
 	}
@@ -220,7 +243,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 	 */
 	private Job buildJobFromAnnotation(AnnotatedToolContext context) throws Exception {
 		Job job = new Job(getConf());
-		MaraAnnotationUtil.instance().configureJobFromField(job, jobField, this.tool, context);
+		MaraAnnotationUtil.INSTANCE.configureJobFromField(job, jobField, this.tool, context);
 		return job;
 	}
 

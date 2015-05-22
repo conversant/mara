@@ -60,7 +60,6 @@ public aspect AnnotatedMapReduceAspect {
 	 * Pointcut that intercepts calls to job.setXXXClass so we can dynamically replace with the annotated
 	 * delegate for mappers, reducers, combiners for resource injection
 	 */
-	@SuppressWarnings("rawtypes")
 	pointcut setComponentClass(Class clazz, Job job):
 		(call(void org.apache.hadoop.mapreduce.Job.setMapperClass(Class))
 		|| call(void org.apache.hadoop.mapreduce.Job.setReducerClass(Class))
@@ -74,7 +73,7 @@ public aspect AnnotatedMapReduceAspect {
 		// First, check for annotations requiring job configuration
 		try {
 			if (isMapperService || isReducerService) {
-				MaraAnnotationUtil.instance().configureJobFromClass(clazz, job);
+				MaraAnnotationUtil.INSTANCE.configureJobFromClass(clazz, job);
 			}
 		} catch (ToolException e) {
 			// For now, just print out and continue
@@ -113,7 +112,6 @@ public aspect AnnotatedMapReduceAspect {
 	 * Pointcut for intercepting the run of the delegated mapper so we can perform resource injection.
 	 * @param context
 	 */
-	@SuppressWarnings("rawtypes")
 	pointcut componentRun(TaskInputOutputContext context):
 		(execution (void com.conversantmedia.mapreduce.tool.AnnotatedDelegating*.run(org.apache.hadoop.mapreduce.*.Context))) && args(context);
 
@@ -142,7 +140,7 @@ public aspect AnnotatedMapReduceAspect {
 
 	@SuppressWarnings({ "rawtypes", "unchecked" }) 
 	private void intializeMultipleOutputs(Object bean, TaskInputOutputContext context) throws IllegalArgumentException, IllegalAccessException {
-		List<Field> fields = MaraAnnotationUtil.instance().findAnnotatedFields(bean.getClass(), NamedOutput.class, AvroNamedOutput.class);
+		List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(bean.getClass(), NamedOutput.class, AvroNamedOutput.class);
 		for (Field field : fields) {
 			NamedOutput namedOutAnnotation = field.getAnnotation(NamedOutput.class);
 			if (namedOutAnnotation != null) {
@@ -164,7 +162,7 @@ public aspect AnnotatedMapReduceAspect {
 	@SuppressWarnings({ "rawtypes", "unchecked" }) 
 	private void closeMultipleOutputs(Object bean, TaskInputOutputContext context) 
 			throws IllegalArgumentException, IllegalAccessException, IOException, InterruptedException {
-		List<Field> fields = MaraAnnotationUtil.instance().findAnnotatedFields(bean.getClass(), NamedOutput.class, AvroNamedOutput.class);
+		List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(bean.getClass(), NamedOutput.class, AvroNamedOutput.class);
 		for (Field field : fields) {
 			NamedOutput namedOutAnnotation = field.getAnnotation(NamedOutput.class);
 			if (namedOutAnnotation != null) {

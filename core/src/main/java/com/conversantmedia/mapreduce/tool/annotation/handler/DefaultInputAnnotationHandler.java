@@ -11,6 +11,7 @@ import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
 import com.conversantmedia.mapreduce.tool.ToolException;
 import com.conversantmedia.mapreduce.tool.annotation.FileInput;
 import com.conversantmedia.mapreduce.tool.annotation.JobInfo;
+import org.springframework.stereotype.Service;
 
 /**
  * This is a special handler designed to setup a default 
@@ -19,11 +20,17 @@ import com.conversantmedia.mapreduce.tool.annotation.JobInfo;
  * and wired in automatically.
  * 
  */
+@Service
 public class DefaultInputAnnotationHandler extends FileInputAnnotationHandler {
 
 	@Override
 	public boolean accept(Annotation annotation) {
 		return annotation.annotationType() == JobInfo.class; // Only 1x. Use required JobInfo annotation as trigger
+	}
+
+	@Override
+	public boolean runLast() {
+		return true;
 	}
 
 	@Override

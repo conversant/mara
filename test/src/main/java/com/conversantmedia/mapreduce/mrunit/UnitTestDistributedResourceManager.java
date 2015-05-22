@@ -96,7 +96,7 @@ public class UnitTestDistributedResourceManager {
 
 	protected void distributeValue(Map<String, Object> values, Object bean) throws IllegalArgumentException, IllegalAccessException {
 		@SuppressWarnings("unchecked")
-		List<Field> fields = MaraAnnotationUtil.instance().findAnnotatedFields(bean.getClass(), Resource.class);
+		List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(bean.getClass(), Resource.class);
 		for (Field field : fields) {
 			Resource resAnnotation = field.getAnnotation(Resource.class);
 			String property = StringUtils.isEmpty(resAnnotation.name())? field.getName() : resAnnotation.name();
@@ -110,7 +110,7 @@ public class UnitTestDistributedResourceManager {
 	@SuppressWarnings("unchecked")
 	protected void addDistributedProperties(Class<?> clazz, List<String> properties) {
 		Distribute distribute;
-		MaraAnnotationUtil util = MaraAnnotationUtil.instance();
+		MaraAnnotationUtil util = MaraAnnotationUtil.INSTANCE;
 		List<Field> fields = util.findAnnotatedFields(clazz, Distribute.class);
 		for (Field field : fields) {
 			distribute = field.getAnnotation(Distribute.class);

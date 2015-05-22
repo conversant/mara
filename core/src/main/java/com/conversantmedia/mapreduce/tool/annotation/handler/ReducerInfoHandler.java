@@ -56,7 +56,7 @@ public class ReducerInfoHandler extends AnnotationHandlerBase {
 
 	@SuppressWarnings("rawtypes")
 	protected void configureOutputKeyValue(Job job, Class<? extends Reducer> reducerClass, ReducerInfo reducer) {
-		MaraAnnotationUtil util = MaraAnnotationUtil.instance();
+		MaraAnnotationUtil util = MaraAnnotationUtil.INSTANCE;
 		// Try and work it out from the generics
 		Type[] params = util.getGenericTypeParams(reducerClass, Reducer.class);
 

@@ -75,7 +75,7 @@ public class MapperInfoHandler extends AnnotationHandlerBase {
 	@SuppressWarnings("rawtypes")
 	public void configureOutputKeyValue(Job job, Class<? extends Mapper> mapperClass, 
 			MapperInfo map, boolean isMapOnly) {
-		MaraAnnotationUtil util = MaraAnnotationUtil.instance();
+		MaraAnnotationUtil util = MaraAnnotationUtil.INSTANCE;
 		// Try and work it out from the generics
 		Type[] params = util.getGenericTypeParams(mapperClass, Mapper.class);
 

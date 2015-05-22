@@ -48,6 +48,15 @@ public interface MaraAnnotationHandler {
 	boolean accept(Annotation annotation) throws ToolException;
 
 	/**
+	 * Indicates if this handler should run after all other non-runLast
+	 * handlers. A 'run-last' handler would typically be used for
+	 * setting defaults based on the state of the configuration following
+	 * all other handlers. The order of 'runLast' handlers is not guaranteed.
+	 * @return <tt>true</tt> if it should run after all other handlers.
+	 */
+	boolean runLast();
+
+	/**
 	 * Process the annotation.
 	 * 
 	 * @param annotation		the annotation to apply to the configuration

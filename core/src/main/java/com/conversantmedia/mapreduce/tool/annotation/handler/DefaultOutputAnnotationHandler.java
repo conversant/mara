@@ -11,17 +11,24 @@ import org.apache.hadoop.mapreduce.lib.output.TextOutputFormat;
 import com.conversantmedia.mapreduce.tool.ToolException;
 import com.conversantmedia.mapreduce.tool.annotation.FileOutput;
 import com.conversantmedia.mapreduce.tool.annotation.JobInfo;
+import org.springframework.stereotype.Service;
 
 /**
  * This is a special handler designed to setup a default 
  * {@link OutputFormat} for the job if none is specified.
  * 
  */
+@Service
 public class DefaultOutputAnnotationHandler extends FileOutputAnnotationHandler {
 
 	@Override
 	public boolean accept(Annotation annotation) {
 		return annotation.annotationType() == JobInfo.class; // Only 1x. Use required JobInfo annotation as trigger 
+	}
+
+	@Override
+	public boolean runLast() {
+		return true;
 	}
 
 	@Override

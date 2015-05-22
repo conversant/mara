@@ -70,7 +70,7 @@ public class DistributedResourceManager extends Configured {
 	protected void configureBeanDistributedResources(Object annotatedBean)
 			throws IllegalAccessException, InvocationTargetException,
 			NoSuchMethodException, IOException {
-		MaraAnnotationUtil util = MaraAnnotationUtil.instance();
+		MaraAnnotationUtil util = MaraAnnotationUtil.INSTANCE;
 		Distribute distribute;
 		// Search for annotated resources to distribute
 		List<Field> fields = util.findAnnotatedFields(annotatedBean.getClass(), Distribute.class);
@@ -185,7 +185,7 @@ public class DistributedResourceManager extends Configured {
 	@SuppressWarnings("unchecked")
 	public static void initializeResources(Object bean, Configuration config) throws ToolException {
 		try {
-			List<Field> fields = MaraAnnotationUtil.instance().findAnnotatedFields(bean.getClass(), Resource.class);
+			List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(bean.getClass(), Resource.class);
 			Path[] files = DistributedCache.getLocalCacheFiles(config);
 			for (Field field : fields) {
 				Resource resAnnotation = field.getAnnotation(Resource.class);
