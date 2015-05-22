@@ -24,19 +24,39 @@
 			<artifactId>mara-core</artifactId>
 			<type>jar</type>
 			<version>${project.version}</version>
-		</dependency>
+    	</dependency>
 
    		<!-- Hadoop Dependencies -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
 			<artifactId>hadoop-core</artifactId>
 			<scope>provided</scope>
+			<exclusions>
+				<exclusion>
+					<artifactId>jackson-core-asl</artifactId>
+					<groupId>org.codehaus.jackson</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>jackson-mapper-asl</artifactId>
+					<groupId>org.codehaus.jackson</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
 			<artifactId>hbase</artifactId>
 			<scope>provided</scope>
+		</dependency>
+    	
+		<dependency>
+			<groupId>org.apache.avro</groupId>
+			<artifactId>avro</artifactId>
+		</dependency>
+    	
+	  	<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
 		</dependency>
     	
     	<!-- Test Deps -->

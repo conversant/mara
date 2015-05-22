@@ -93,6 +93,16 @@
 				<artifactId>hadoop-core</artifactId>
 				<version>${hadoop.version}</version>
 				<scope>provided</scope>
+				<exclusions>
+					<exclusion>
+						<artifactId>jackson-mapper-asl</artifactId>
+						<groupId>org.codehaus.jackson</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>jackson-core-asl</artifactId>
+						<groupId>org.codehaus.jackson</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -100,6 +110,16 @@
 				<artifactId>hbase</artifactId>
 				<version>${hbase.version}</version>
 				<scope>provided</scope>
+				<exclusions>
+					<exclusion>
+						<artifactId>jackson-mapper-asl</artifactId>
+						<groupId>org.codehaus.jackson</groupId>
+					</exclusion>
+					<exclusion>
+						<artifactId>jackson-core-asl</artifactId>
+						<groupId>org.codehaus.jackson</groupId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 
 			<dependency>
@@ -147,6 +167,11 @@
 				<groupId>commons-beanutils</groupId>
 				<artifactId>commons-beanutils</artifactId>
 				<version>1.9.1</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.4</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-cli</groupId>
