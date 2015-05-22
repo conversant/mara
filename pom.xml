@@ -67,7 +67,7 @@
 		<license.name>apache_v2</license.name>
 		
 		<hadoop.version>2.6.0</hadoop.version>
-		<hbase.version>0.94.27</hbase.version>
+		<hbase.version>0.96.1.1-hadoop2</hbase.version>
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<aspectj.version>1.8.2</aspectj.version>
 		<aspectj.compliance.level>1.7</aspectj.compliance.level>
@@ -96,10 +96,17 @@
 				<artifactId>hadoop-yarn-api</artifactId>
 				<version>${hadoop.version}</version>
 			</dependency>
+
+			<dependency>
+				<groupId>org.apache.hbase</groupId>
+				<artifactId>hbase-client</artifactId>
+				<version>${hbase.version}</version>
+				<scope>provided</scope>
+			</dependency>
 			
 			<dependency>
 				<groupId>org.apache.hbase</groupId>
-				<artifactId>hbase</artifactId>
+				<artifactId>hbase-hadoop2-compat</artifactId>
 				<version>${hbase.version}</version>
 				<scope>provided</scope>
 			</dependency>
