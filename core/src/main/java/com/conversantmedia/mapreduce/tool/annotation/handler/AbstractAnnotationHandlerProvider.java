@@ -34,7 +34,7 @@ public abstract class AbstractAnnotationHandlerProvider implements AnnotationHan
         }
 
         // Honor the 'runLast' flag
-        handlers.sort(new Comparator<MaraAnnotationHandler>() {
+        Collections.sort(handlers, new Comparator<MaraAnnotationHandler>() {
             @Override
             public int compare(MaraAnnotationHandler o1, MaraAnnotationHandler o2) {
                 if (o1.runLast() == o2.runLast()) return 0;

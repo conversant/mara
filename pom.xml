@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.conversantmedia</groupId>
 	<artifactId>mara-parent</artifactId>
-	<version>0.9.2-hbase94-SNAPSHOT</version>
+	<version>0.94-mapr-v1-hbase-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Mara - Java Annotations Framework for MapReduce on Hadoop</description>
@@ -75,7 +75,7 @@
 		
 		<license.name>apache_v2</license.name>
 		
-		<hadoop.version>2.6.0</hadoop.version>
+		<hadoop.version>1.0.3-mapr-3.0.3</hadoop.version>
 		<hbase.version>0.94.17-mapr-1403-m7-3.1.1</hbase.version>
 		<spring.version>3.1.2.RELEASE</spring.version>
 		<aspectj.version>1.8.2</aspectj.version>
@@ -90,21 +90,9 @@
 			<!-- Hadoop/MR -->
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
-				<artifactId>hadoop-common</artifactId>
+				<artifactId>hadoop-core</artifactId>
 				<version>${hadoop.version}</version>
 				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.hadoop</groupId>
-				<artifactId>hadoop-mapreduce-client-core</artifactId>
-				<version>${hadoop.version}</version>
-				<scope>provided</scope>
-			</dependency>
-			
-			<dependency>
-				<groupId>org.apache.hadoop</groupId>
-				<artifactId>hadoop-yarn-api</artifactId>
-				<version>${hadoop.version}</version>
 			</dependency>
 
 			<dependency>

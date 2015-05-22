@@ -11,7 +11,7 @@
 	<parent>
 		<groupId>com.conversantmedia</groupId>
 		<artifactId>mara-parent</artifactId>
-		<version>0.9.2-hbase94-SNAPSHOT</version>
+		<version>0.94-mapr-v1-hbase-SNAPSHOT</version>
 	</parent>
 
 	<properties>
@@ -29,23 +29,13 @@
    		<!-- Hadoop Dependencies -->
 		<dependency>
 			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-common</artifactId>
+			<artifactId>hadoop-core</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-mapreduce-client-core</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-yarn-api</artifactId>
-			<scope>provided</scope>
-		</dependency>
-		
+
 		<dependency>
 			<groupId>org.apache.hbase</groupId>
-			<artifactId>hbase-hadoop2-compat</artifactId>
+			<artifactId>hbase</artifactId>
 			<scope>provided</scope>
 		</dependency>
     	

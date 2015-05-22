@@ -39,7 +39,7 @@ public class DefaultInputAnnotationHandler extends FileInputAnnotationHandler {
 		// establish our default here.
 		try {
 			if (TextInputFormat.class.equals(job.getInputFormatClass()) // Hadoop default
-					&& StringUtils.isBlank(job.getConfiguration().get(FileInputFormat.INPUT_DIR))) {
+					&& StringUtils.isBlank(job.getConfiguration().get("mapred.input.dir"))) {
 				annotation = DefaultInput.class.getDeclaredField("job").getAnnotation(FileInput.class);
 				super.process(annotation, job, null);
 			}

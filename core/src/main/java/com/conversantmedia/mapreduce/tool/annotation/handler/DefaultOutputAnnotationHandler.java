@@ -37,7 +37,7 @@ public class DefaultOutputAnnotationHandler extends FileOutputAnnotationHandler 
 		// establish our default here.
 		try {
 			if (TextOutputFormat.class.equals(job.getOutputFormatClass())
-					&& StringUtils.isBlank(job.getConfiguration().get(FileOutputFormat.OUTDIR))) {
+					&& StringUtils.isBlank(job.getConfiguration().get("mapred.output.dir"))) {
 				annotation = DefaultOutput.class.getDeclaredField("job").getAnnotation(FileOutput.class);
 				super.process(annotation, job, null);
 			}
