@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.conversantmedia</groupId>
 	<artifactId>mara-parent</artifactId>
-	<version>0.9.2-mapr-v1-hbase94-SNAPSHOT</version>
+	<version>0.9.2-mapr-4.0.2mr1-hbase0.94-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Mara - Java Annotations Framework for MapReduce on Hadoop</description>
