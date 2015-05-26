@@ -47,7 +47,7 @@
 		<dependency>
 			<groupId>org.apache.mrunit</groupId>
 			<artifactId>mrunit</artifactId>
-			<classifier>hadoop1</classifier>
+			<classifier>hadoop2</classifier>
 			<scope>compile</scope>
 		</dependency>
 
