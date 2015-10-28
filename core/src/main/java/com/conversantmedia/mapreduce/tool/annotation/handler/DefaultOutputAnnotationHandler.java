@@ -1,7 +1,7 @@
 package com.conversantmedia.mapreduce.tool.annotation.handler;
 
 import java.lang.annotation.Annotation;
-
+import java.lang.reflect.Field;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.OutputFormat;
@@ -36,12 +36,11 @@ public class DefaultOutputAnnotationHandler extends FileOutputAnnotationHandler 
 		// If the job doesn't have an output format specified, we'll 
 		// establish our default here.
 		try {
-			if (TextOutputFormat.class.equals(job.getOutputFormatClass())
-					&& StringUtils.isBlank(job.getConfiguration().get(FileOutputFormat.OUTDIR))) {
+			if (((Field)target).getAnnotation(FileOutput.class) == null) {
 				annotation = DefaultOutput.class.getDeclaredField("job").getAnnotation(FileOutput.class);
 				super.process(annotation, job, null);
 			}
-		} catch (ClassNotFoundException | NoSuchFieldException | SecurityException e) {
+		} catch (NoSuchFieldException | SecurityException e) {
 			throw new IllegalStateException(e);
 		}
 	}
