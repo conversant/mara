@@ -28,7 +28,6 @@ import java.lang.reflect.InvocationTargetException;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.mapreduce.Job;
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
-import org.apache.hadoop.mapreduce.lib.output.NullOutputFormat;
 import org.springframework.stereotype.Service;
 
 import com.conversantmedia.mapreduce.tool.ToolException;
@@ -53,16 +52,11 @@ public class FileOutputAnnotationHandler extends AnnotationHandlerBase {
 
 	protected void configureOutputs(Job job, FileOutput fileOutput)
 			throws IllegalAccessException, InvocationTargetException,
-				   NoSuchMethodException, ToolException, IllegalArgumentException, IOException {
-		if (fileOutput.value() != NullOutputFormat.class) {
-			job.setOutputFormatClass(fileOutput.value());
-			// The property used for retrieving the path
-			Object path = this.evaluateExpression(fileOutput.path());
-			configureFileOutputPaths(job, path);
-		}
-		else {
-			job.setOutputFormatClass(fileOutput.value());
-		}
+			NoSuchMethodException, ToolException, IllegalArgumentException, IOException {
+		job.setOutputFormatClass(fileOutput.value());
+		// The property used for retrieving the path
+		Object path = this.evaluateExpression(fileOutput.path());
+		configureFileOutputPaths(job, path);
 	}
 
 	private void configureFileOutputPaths(Job job, Object value)

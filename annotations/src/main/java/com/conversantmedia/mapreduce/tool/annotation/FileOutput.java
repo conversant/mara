@@ -27,7 +27,7 @@ import java.lang.annotation.Inherited;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import org.apache.hadoop.mapreduce.OutputFormat;
+
 import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
 
 @Inherited
@@ -40,7 +40,7 @@ public @interface FileOutput {
 	 * @return	the output format
 	 */
 	@SuppressWarnings("rawtypes")
-	Class<? extends OutputFormat> value();
+	Class<? extends FileOutputFormat> value();
 
 	/**
 	 * The path (or expression for retrieving).
