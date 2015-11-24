@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -25,7 +24,7 @@ public class ReflectionAnnotationHandlerProvider extends AbstractAnnotationHandl
     @Override
     public List<MaraAnnotationHandler> getHandlers() throws ToolException {
 
-        List<MaraAnnotationHandler> handlers = new ArrayList<MaraAnnotationHandler>();
+        List<MaraAnnotationHandler> handlers = new ArrayList<>();
 
         Reflections reflections = initReflections(getBasePackagesToScanForComponents());
         Set<Class<?>> handlerClasses = reflections.getTypesAnnotatedWith(Service.class);

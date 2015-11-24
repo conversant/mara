@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Mutation;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.hamcrest.Description;
@@ -65,7 +65,7 @@ import org.hamcrest.TypeSafeDiagnosingMatcher;
  */
 public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Mutation> {
 
-	private Matcher<? super T> nameMatcher;
+	private final Matcher<? super T> nameMatcher;
 	
 	/**
 	 *
@@ -91,15 +91,15 @@ public class ColumnMatcher<T> extends TypeSafeDiagnosingMatcher<Mutation> {
 	 * @param stopOnFirstMatch
 	 * @return
 	 */
-	protected List<KeyValue> findMatches(Mutation mutation, Description mismatch, boolean stopOnFirstMatch) {
-		List<KeyValue> matches = new ArrayList<>();
-		Map<byte[], List<KeyValue>> familyMap = mutation.getFamilyMap();
+	protected List<Cell> findMatches(Mutation mutation, Description mismatch, boolean stopOnFirstMatch) {
+		List<Cell> matches = new ArrayList<>();
+		Map<byte[], List<Cell>> familyMap = mutation.getFamilyCellMap();
 		int count = 0;
 		String columnName;
-		for (Entry<byte[], List<KeyValue>> family : familyMap.entrySet()) {
+		for (Entry<byte[], List<Cell>> family : familyMap.entrySet()) {
 			// Family must be composed of printable characters
 			String familyStr = Bytes.toString(family.getKey());
-			for (KeyValue column : family.getValue()) {
+			for (Cell column : family.getValue()) {
 				String qualifier = Bytes.toString(CellUtil.cloneQualifier(column));
 				// Match the name using the supplied matcher.
 				columnName = familyStr + ":" + qualifier;

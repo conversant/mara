@@ -20,8 +20,8 @@ import static org.hamcrest.Matchers.anything;
 
 import java.util.List;
 
+import org.apache.hadoop.hbase.Cell;
 import org.apache.hadoop.hbase.CellUtil;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.Mutation;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -85,7 +85,7 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Mutation
 	@Override
 	protected boolean matchesSafely(Mutation mutation, Description mismatch) {	
 		// Delegate check for column match to 
-		List<KeyValue> matchingKeyValues = columnMatcher.findMatches(mutation, mismatch, false);
+		List<Cell> matchingKeyValues = columnMatcher.findMatches(mutation, mismatch, false);
 		if (matchingKeyValues.size() == 0) {
 			columnMatcher.describeMismatch(mutation, mismatch);
 			return false;
@@ -93,7 +93,7 @@ public class KeyValueMatcher<COL,VAL> extends TypeSafeDiagnosingMatcher<Mutation
 
 		// Check the key-values for a matching value
 		int count = 0;
-		for (KeyValue columnMatch : matchingKeyValues) {
+		for (Cell columnMatch : matchingKeyValues) {
 			byte[] valueBytes = CellUtil.cloneValue(columnMatch);
 			VAL value = Matchers.valueOf(valueBytes, this.valueClass);
 			if (valueMatcher.matches(value)){

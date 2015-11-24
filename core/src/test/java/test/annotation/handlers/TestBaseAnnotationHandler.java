@@ -3,9 +3,7 @@ package test.annotation.handlers;
 import com.conversantmedia.mapreduce.tool.AnnotatedTool;
 import com.conversantmedia.mapreduce.tool.ToolException;
 import com.conversantmedia.mapreduce.tool.annotation.handler.AnnotationHandlerBase;
-import com.conversantmedia.mapreduce.tool.annotation.handler.MaraAnnotationHandler;
 import org.apache.hadoop.mapreduce.Job;
-import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
 

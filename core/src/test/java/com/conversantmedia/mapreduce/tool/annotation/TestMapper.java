@@ -31,9 +31,6 @@ import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Mapper;
 import org.apache.hadoop.mapreduce.lib.output.MultipleOutputs;
 
-import com.conversantmedia.mapreduce.tool.annotation.KeyValue;
-import com.conversantmedia.mapreduce.tool.annotation.NamedOutput;
-
 @SuppressWarnings("rawtypes")
 public class TestMapper extends Mapper<LongWritable, Text, IntWritable, Text> {
 

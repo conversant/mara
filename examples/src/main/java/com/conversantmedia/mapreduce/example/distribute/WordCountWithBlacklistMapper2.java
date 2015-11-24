@@ -45,7 +45,7 @@ public class WordCountWithBlacklistMapper2 extends Mapper<LongWritable, Text, Te
 	@Resource(name="blacklist")
 	private Set<String> blacklistedWords;
 
-	private Text word = new Text();
+	private final Text word = new Text();
 
 	@Override
 	protected void map(LongWritable key, Text value, Context context)

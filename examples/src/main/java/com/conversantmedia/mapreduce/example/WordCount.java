@@ -38,7 +38,7 @@ public class WordCount {
 	public static void main(String[] args) {
 
 		try {
-			Job job = new Job(new Configuration(), "WordCount v2");
+			Job job = Job.getInstance(new Configuration(), "WordCount v2");
 
 			job.setInputFormatClass(FileInputFormat.class);
 			job.setOutputFormatClass(FileOutputFormat.class);

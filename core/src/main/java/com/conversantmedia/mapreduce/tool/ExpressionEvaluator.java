@@ -81,7 +81,7 @@ public class ExpressionEvaluator {
 	 * @throws ToolException	if something goes wrong
 	 */
 	public Object evaluate(Object tool, AnnotatedToolContext context, String expr) throws ToolException {
-		Map<String, Object> ognlContext = new HashMap<String, Object>();
+		Map<String, Object> ognlContext = new HashMap<>();
 		ognlContext.put("context", context.getAnnotatedBean());
 		return evaluate(tool, ognlContext, expr);
 	}

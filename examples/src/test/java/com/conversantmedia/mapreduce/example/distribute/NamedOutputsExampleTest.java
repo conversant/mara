@@ -51,19 +51,19 @@ public class NamedOutputsExampleTest
 
 		String lineStr = "a b c d e f a";
 
-		List<Pair<LongWritable, Text>> inputs = new ArrayList<Pair<LongWritable, Text>>();
+		List<Pair<LongWritable, Text>> inputs = new ArrayList<>();
 		LongWritable offset = new LongWritable(0);
 		Text line = new Text(lineStr);
-		inputs.add(new Pair<LongWritable, Text>(offset, line));
+		inputs.add(new Pair<>(offset, line));
 
 		LongWritable ONE = new LongWritable(1l);
-		List<Pair<Text,LongWritable>> outputs = new ArrayList<Pair<Text, LongWritable>>();
-		outputs.add(new Pair<Text,LongWritable>(new Text("a"), new LongWritable(2l)));
-		outputs.add(new Pair<Text,LongWritable>(new Text("b"), ONE));
-		outputs.add(new Pair<Text,LongWritable>(new Text("c"), ONE));
-		outputs.add(new Pair<Text,LongWritable>(new Text("d"), ONE));
-		outputs.add(new Pair<Text,LongWritable>(new Text("e"), ONE));
-		outputs.add(new Pair<Text,LongWritable>(new Text("f"), ONE));
+		List<Pair<Text,LongWritable>> outputs = new ArrayList<>();
+		outputs.add(new Pair<>(new Text("a"), new LongWritable(2l)));
+		outputs.add(new Pair<>(new Text("b"), ONE));
+		outputs.add(new Pair<>(new Text("c"), ONE));
+		outputs.add(new Pair<>(new Text("d"), ONE));
+		outputs.add(new Pair<>(new Text("e"), ONE));
+		outputs.add(new Pair<>(new Text("f"), ONE));
 
 		MapReduceDriver driver = getTestDriver();
 		driver.addAll(inputs);

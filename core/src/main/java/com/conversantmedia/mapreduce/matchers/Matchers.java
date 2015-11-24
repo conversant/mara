@@ -40,24 +40,24 @@ public abstract class Matchers {
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T> T valueOf(byte[] bytes, Class<? extends T> valueClass) {
-		if (valueClass.isInstance(byte[].class)) {
+		if (byte[].class.equals(valueClass)) {
 			return (T)bytes;
-		} else if (valueClass.isInstance(String.class)) {
+		} else if (String.class.equals(valueClass)) {
 			return (T)Bytes.toString(bytes);
 		}
-		else if (valueClass.isInstance(Long.class)) {
+		else if (Long.class.equals(valueClass)) {
 			return (T)Long.valueOf(Bytes.toLong(bytes));
 		}
-		else if (valueClass.isInstance(Double.class)) {
+		else if (Double.class.equals(valueClass)) {
 			return (T)Double.valueOf(Bytes.toDouble(bytes));
 		}
-		else if (valueClass.isInstance(Float.class)) {
+		else if (Float.class.equals(valueClass)) {
 			return (T)Float.valueOf(Bytes.toFloat(bytes));
 		}
-		else if (valueClass.isInstance(Integer.class)) {
+		else if (Integer.class.equals(valueClass)) {
 			return (T)Integer.valueOf(Bytes.toInt(bytes));
 		}
-		else if (valueClass.isInstance(Short.class)) {
+		else if (Short.class.equals(valueClass)) {
 			return (T)Short.valueOf(Bytes.toShort(bytes));
 		}
 		return null;

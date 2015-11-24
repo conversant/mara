@@ -66,14 +66,14 @@ public class AvroMultipleOutputExampleTest extends
 		
 		ReduceDriver<Text, LongWritable, AvroKey<AvroExample>, NullWritable> driver = this.getTestDriver();
 		LongWritable ONE = new LongWritable(1);
-		List<String> words = new ArrayList<String>();
+		List<String> words = new ArrayList<>();
 		words.add("10");
 		words.add("20");
 		words.add("30");
 		words.add("40");
 
 		for (String word : words) {
-			List<LongWritable> counts = new ArrayList<LongWritable>();
+			List<LongWritable> counts = new ArrayList<>();
 			for (int i = 0; i < Long.parseLong(word); i++) {
 				counts.add(ONE);
 			}
@@ -96,8 +96,7 @@ public class AvroMultipleOutputExampleTest extends
 				}
 			} catch (InterruptedException e) {
 				fail(e.getMessage());
-			};
-
+			}
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}

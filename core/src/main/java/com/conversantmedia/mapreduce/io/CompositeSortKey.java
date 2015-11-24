@@ -38,9 +38,8 @@ import org.apache.hadoop.util.ReflectionUtils;
  * @param <G> Grouping/Partitioning key type
  * @param <S> Sorting key type
  */
-@SuppressWarnings("rawtypes")
 public class CompositeSortKey<G extends WritableComparable, S extends WritableComparable>
-	implements WritableComparable<CompositeSortKey> {
+	implements WritableComparable<CompositeSortKey<G, S>> {
 
 	// The key to use for grouping and partitioning our keys into the
 	// reduce phase.
@@ -89,14 +88,20 @@ public class CompositeSortKey<G extends WritableComparable, S extends WritableCo
 		this.getSortKey().readFields(in);
 	}
 
-	@Override @SuppressWarnings("unchecked")
-	public int compareTo(CompositeSortKey that) {
+	/**
+	 * Natural order of group, then natural order of sort key.
+	 *
+	 * @param that the other key
+	 * @return negative integer, zero, or a positive integer as per contract
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public int compareTo(CompositeSortKey<G, S> that) {
 		int compare = this.groupKey.compareTo(that.groupKey);
 		if (compare == 0) {
 			compare = this.sortKey.compareTo(that.sortKey);
 		}
 		return compare;
-
 	}
 
 	@Override
@@ -145,47 +150,43 @@ public class CompositeSortKey<G extends WritableComparable, S extends WritableCo
 	}
 
 	/**
-	 * Comparator for sorting the composite key based on the partition key
+	 * Comparator for sorting the composite key based on the natural order of both the partition (group) key
 	 * and then the sort key.
 	 */
-	public static class NaturalSortComparator extends CompositeSortKeyComparator implements RawComparator {
-
-		@Override @SuppressWarnings({"unchecked" })
-		public int compare(CompositeSortKey key1, CompositeSortKey key2) {
-			int compare = key1.getGroupKey().compareTo(key2.getGroupKey());
-			if (compare == 0) {
-				compare = key1.getSortKey().compareTo(key2.getSortKey());
-			}
-			return compare;
-		}
-
-	}
-
-	/**
-	 * Comparator for sorting the composite key based on the partition key
-	 * and then the sort key in reverse natural order.
-	 */
-	public static final class ReverseSortComparator extends NaturalSortComparator {
-
-		@Override @SuppressWarnings({"unchecked" })
-		public int compare(CompositeSortKey key1, CompositeSortKey key2) {
-			int compare = key1.getGroupKey().compareTo(key2.getGroupKey());
-			if (compare == 0) {
-				compare = key1.getSortKey().compareTo(key2.getSortKey()) * -1;
-			}
-			return compare;
-		}
-	}
-
-	/**
-	 * Comparator for grouping based on the key's partition key, natural ordering.
-	 */
-	public static final class GroupingComparator extends CompositeSortKeyComparator {
-
-		@SuppressWarnings({"unchecked" })
+	public static class NaturalSortComparator<G extends WritableComparable, S extends WritableComparable> extends CompositeSortKeyComparator<G, S> {
 		@Override
-		public int compare(CompositeSortKey key1, CompositeSortKey key2) {
-			return key1.getGroupKey().compareTo(key2.getGroupKey());
+		public int compare(CompositeSortKey<G, S> key1, CompositeSortKey<G, S> key2) {
+			return key1.compareTo(key2);
+		}
+	}
+
+	/**
+	 * Comparator for sorting the composite key based on the natural order of the partition (group) key
+	 * and then the reverse order for the sort key.
+	 */
+	public static final class ReverseSortComparator<G extends WritableComparable, S extends WritableComparable> extends CompositeSortKeyComparator<G, S> {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public int compare(CompositeSortKey<G, S> key1, CompositeSortKey<G, S> key2) {
+			int compare = key1.groupKey.compareTo(key2.groupKey);
+			if (compare == 0) {
+				compare = key1.sortKey.compareTo(key2.sortKey) * -1;
+			}
+			return compare;
+		}
+	}
+
+	/**
+	 * Comparator for grouping based on the natural ordering  of the partition (group) key
+	 */
+	public static final class GroupingComparator<G extends WritableComparable,
+			S extends WritableComparable> extends CompositeSortKeyComparator<G, S> {
+
+		@SuppressWarnings("unchecked")
+		@Override
+		public int compare(CompositeSortKey<G, S> key1, CompositeSortKey<G, S> key2) {
+			return key1.groupKey.compareTo(key2.groupKey);
 		}
 	}
 
@@ -203,9 +204,10 @@ public class CompositeSortKey<G extends WritableComparable, S extends WritableCo
 	}
 
 	/**
+	 * This class handles key creation for eventual sorting by partition and sort keys
 	 *
-	 * @param <G>	the grouping key type
-	 * @param <S>	the sorting key type
+	 * @param <G> Partition or Group Key
+	 * @param <S> Sort Key
 	 */
 	public abstract static class CompositeSortKeyComparator<G extends WritableComparable,
 		S extends WritableComparable> extends Configured implements RawComparator<CompositeSortKey<G, S>> {
@@ -221,9 +223,8 @@ public class CompositeSortKey<G extends WritableComparable, S extends WritableCo
 			buffer = new DataInputBuffer();
 		}
 
-		@SuppressWarnings("unchecked")
-		public CompositeSortKey newKey() {
-			CompositeSortKey key = new CompositeSortKey();
+		public CompositeSortKey<G, S> newKey() {
+			CompositeSortKey<G, S> key = new CompositeSortKey<>();
 			key.setGroupKey(ReflectionUtils.newInstance(groupKeyClass, null));
 			key.setSortKey(ReflectionUtils.newInstance(sortKeyClass, null));
 			return key;
