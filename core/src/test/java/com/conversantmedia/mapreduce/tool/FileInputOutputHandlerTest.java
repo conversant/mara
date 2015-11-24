@@ -28,6 +28,8 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.hadoop.fs.Path;
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 public class FileInputOutputHandlerTest {
 
 	@Test
@@ -64,8 +66,7 @@ public class FileInputOutputHandlerTest {
 
 
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			fail(e.getMessage());
 		}
 	}
 

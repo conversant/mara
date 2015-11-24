@@ -55,7 +55,7 @@ public class AvroUnitTestHelper {
 
 	public <D> Iterable<D> getRecords(File file) throws IOException {
 		Schema schema = getSchema(file);
-		DatumReader<D> reader = new SpecificDatumReader<D>(schema);
+		DatumReader<D> reader = new SpecificDatumReader<>(schema);
 		FileReader<D> fileReader = DataFileReader.openReader(file, reader);
 		return fileReader;
 	}
@@ -70,7 +70,7 @@ public class AvroUnitTestHelper {
 		Schema schema = null;
 		FileReader<IndexedRecord> fileReader = null;
 		try {
-			DatumReader<IndexedRecord> reader = new GenericDatumReader<IndexedRecord>();
+			DatumReader<IndexedRecord> reader = new GenericDatumReader<>();
 			fileReader = DataFileReader.openReader(file, reader);
 			schema = fileReader.getSchema();
 		}

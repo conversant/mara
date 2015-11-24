@@ -40,9 +40,10 @@ import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.conf.Configured;
-import org.apache.hadoop.filecache.DistributedCache;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.MRJobConfig;
 import org.springframework.beans.ConversionNotSupportedException;
 import org.springframework.beans.SimpleTypeConverter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -61,9 +62,11 @@ public class DistributedResourceManager extends Configured {
 
 	public static final String CONFIGKEYBASE_RESOURCE =
 			DistributedResourceManager.class.getPackage().toString() + "@Resource;";
+	private final Job job;
 
-	protected DistributedResourceManager(Configuration config) {
-		setConf(config);
+	protected DistributedResourceManager(Job job) {
+		this.job = job;
+		setConf(job.getConfiguration());
 	}
 
 	@SuppressWarnings("unchecked")
@@ -128,9 +131,8 @@ public class DistributedResourceManager extends Configured {
 		else if (value instanceof Path) {
 			Path path = (Path)value;
 			valueString = path.getName();
-
-			// Distribute the file
-			DistributedCache.addCacheFile(path.toUri(), getConf());
+			// Distribute the file the new way
+			this.job.addCacheFile(path.toUri());
 		}
 		else if (value instanceof File ){
 			File file = (File)value;
@@ -170,7 +172,7 @@ public class DistributedResourceManager extends Configured {
 		FileSystem fs = FileSystem.get(getConf());
 		Path dest = new Path(file.getAbsolutePath());
 		fs.copyFromLocalFile(true, true, new Path(file.getAbsolutePath()), dest);
-		DistributedCache.addCacheFile(dest.toUri(), getConf());
+		this.job.addCacheFile(dest.toUri());
 		return dest;
 	}
 
@@ -186,7 +188,7 @@ public class DistributedResourceManager extends Configured {
 	public static void initializeResources(Object bean, Configuration config) throws ToolException {
 		try {
 			List<Field> fields = MaraAnnotationUtil.INSTANCE.findAnnotatedFields(bean.getClass(), Resource.class);
-			Path[] files = DistributedCache.getLocalCacheFiles(config);
+			Path[] files = org.apache.hadoop.util.StringUtils.stringToPath(config.getStrings(MRJobConfig.CACHE_LOCALFILES));
 			for (Field field : fields) {
 				Resource resAnnotation = field.getAnnotation(Resource.class);
 				String key = StringUtils.isEmpty(resAnnotation.name())? field.getName() : resAnnotation.name();
@@ -197,7 +199,7 @@ public class DistributedResourceManager extends Configured {
 					String valueString = parts[1];
 
 					// Retrieve the value
-					Object value = getResourceValue(bean, field, valueString, className, files, config);
+					Object value = getResourceValue(field, valueString, className, files);
 
 					setFieldValue(field, bean, value);
 				}
@@ -224,8 +226,8 @@ public class DistributedResourceManager extends Configured {
 		field.set(bean, value);
 	}
 
-	private static Object getResourceValue(Object bean, Field field, String valueString,
-			String originalTypeClassname, Path[] distFiles, Configuration config) throws IOException, ClassNotFoundException {
+	private static Object getResourceValue(Field field, String valueString,
+			String originalTypeClassname, Path[] distFiles) throws IOException, ClassNotFoundException {
 
 		// First, determine our approach:
 		Object value = null;
@@ -236,7 +238,7 @@ public class DistributedResourceManager extends Configured {
 			value = ConvertUtils.convert(valueString, field.getType());
 		}
 		else {
-			Path path = distributedFilePath(valueString, distFiles, config);
+			Path path = distributedFilePath(valueString, distFiles);
 
 			// This is something on the distributed cache (or illegal)
 			if (field.getType() == Path.class) {
@@ -267,7 +269,7 @@ public class DistributedResourceManager extends Configured {
 		return value;
 	}
 
-	private static Path distributedFilePath(String fileName, Path[] distFiles, Configuration config) throws IOException {
+	private static Path distributedFilePath(String fileName, Path[] distFiles) throws IOException {
 		for (Path path : distFiles) {
 			if (StringUtils.equals(fileName,path.getName())) {
 				return path;

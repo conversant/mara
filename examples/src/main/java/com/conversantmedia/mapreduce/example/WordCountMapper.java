@@ -36,7 +36,7 @@ public class WordCountMapper extends Mapper<LongWritable, Text, Text, LongWritab
 
 	private final static LongWritable ONE = new LongWritable(1);
 
-	private Text word = new Text();
+	private final Text word = new Text();
 
 	@Override
 	protected void map(LongWritable key, Text value, Context context)

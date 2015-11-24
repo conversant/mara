@@ -79,7 +79,7 @@ public class AvroInputOutputExample {
 		@Resource
 		private long minimum;
 
-		private final AvroKey<AvroExample> _key = new AvroKey<AvroExample>();
+		private final AvroKey<AvroExample> _key = new AvroKey<>();
 
 		@Override
 		protected void map(AvroKey<AvroExample> key, NullWritable value,

@@ -31,13 +31,11 @@ import java.io.InputStream;
 import java.net.URL;
 import java.text.BreakIterator;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.jar.Manifest;
 
@@ -49,9 +47,7 @@ import org.apache.hadoop.conf.Configurable;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.util.ToolRunner;
 import org.reflections.Reflections;
-import org.reflections.ReflectionsException;
 import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.stereotype.Service;
 
 import com.conversantmedia.mapreduce.tool.annotation.Driver;
 import com.conversantmedia.mapreduce.tool.annotation.Hidden;
@@ -165,7 +161,7 @@ public class RunJob {
 
 	@SuppressWarnings("unchecked")
 	protected static Map<String, DriverMeta> findAllDrivers(Reflections reflections) {
-		Map<String, DriverMeta> idMap = new TreeMap<String, DriverMeta>( new Comparator<String>() {
+		Map<String, DriverMeta> idMap = new TreeMap<>( new Comparator<String>() {
 			@Override
 			public int compare(String s1, String s2) {
 				return s1.compareTo(s2);
@@ -225,9 +221,7 @@ public class RunJob {
 			if (manifestUrl != null) {
 				in = manifestUrl.openStream();
 				Manifest manifest = new Manifest(in);
-				if (manifest != null) {
-					version = manifest.getMainAttributes().getValue("Implementation-Version");
-				}
+				version = manifest.getMainAttributes().getValue("Implementation-Version");
 			}
 		} catch (Exception e) {
 			// No point in exiting the app because we fail to read version from manifest.
@@ -296,11 +290,11 @@ public class RunJob {
 		System.out.println(StringUtils.center("A V A I L A B L E    D R I V E R S", width));
 		System.out.println(sep);
 		String[] underscores = new String[colNames.length];
-		StringBuffer headersFormatSb = new StringBuffer();
-		StringBuffer valuesFormatSb = new StringBuffer();
+		StringBuilder headersFormatSb = new StringBuilder();
+		StringBuilder valuesFormatSb = new StringBuilder();
 		for (int i = 0; i < widths.length; i++) {
-			headersFormatSb.append("%-" + (widths[i]+padding) + "s");
-			valuesFormatSb.append("%" + aligns[i] + (widths[i]+padding) + "s");
+			headersFormatSb.append("%-").append(widths[i] + padding).append("s");
+			valuesFormatSb.append("%").append(aligns[i]).append(widths[i] + padding).append("s");
 			underscores[i] = StringUtils.repeat("-", widths[i]);
 		}
 		String format = headersFormatSb.toString();
@@ -310,7 +304,7 @@ public class RunJob {
 		System.out.println();
 
 		format = valuesFormatSb.toString();
-		List<String> descriptionLines = new ArrayList<String>();
+		List<String> descriptionLines = new ArrayList<>();
 		for (Entry<String, DriverMeta> e : driversMap.entrySet()) {
 			if (!e.getValue().hidden) {
 				descriptionLines.clear();
@@ -335,7 +329,7 @@ public class RunJob {
 		int start = boundary.first();
 		int end = boundary.next();
 		int lineLength = 0;
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		while (end != BreakIterator.DONE) {
 			String word = text.substring(start, end);
 			lineLength = lineLength + word.length();
@@ -365,11 +359,11 @@ public class RunJob {
 			this.listener = listenerClass;
 		}
 
-		public String id;
-		public String description;
-		public String version;
-		public Class<?> driverClass;
-		public Class<? extends ToolListener>[] listener;
+		public final String id;
+		public final String description;
+		public final String version;
+		public final Class<?> driverClass;
+		public final Class<? extends ToolListener>[] listener;
 		public boolean hidden = false;
 
 		public void addToConfig(Configuration conf) {

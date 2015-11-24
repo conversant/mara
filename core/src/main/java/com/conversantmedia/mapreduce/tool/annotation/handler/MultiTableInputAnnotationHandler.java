@@ -38,7 +38,7 @@ public class MultiTableInputAnnotationHandler extends TableInputAnnotationHandle
 			Configuration conf = job.getConfiguration();
 			HBaseConfiguration.merge(conf, HBaseConfiguration.create(conf));
 	
-			List<String> scans = new ArrayList<String>();
+			List<String> scans = new ArrayList<>();
 	
 			MultiTableInput multiInputAnnotation = (MultiTableInput)annotation;
 			for (TableInput tableInput : multiInputAnnotation.value()) {

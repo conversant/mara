@@ -45,7 +45,7 @@ import com.conversantmedia.mapreduce.tool.annotation.NamedOutput;
 @Service
 public class NamedOutputAnnotationHandler extends AnnotationHandlerBase {
 
-	private Set<String> configured = new HashSet<String>();
+	private final Set<String> configured = new HashSet<>();
 
 	@Override
 	public boolean accept(Annotation annotation) throws ToolException {
@@ -126,7 +126,7 @@ public class NamedOutputAnnotationHandler extends AnnotationHandlerBase {
 				if (genericType instanceof ParameterizedType) {
 					Type[] keyValueTypes = ((ParameterizedType)genericType).getActualTypeArguments();
 					if (keyValueTypes != null && keyValueTypes.length == 2) {
-						kvTypePair = new ImmutablePair<Type, Type>(keyValueTypes[0], keyValueTypes[1]);
+						kvTypePair = new ImmutablePair<>(keyValueTypes[0], keyValueTypes[1]);
 					}
 				}
 			}

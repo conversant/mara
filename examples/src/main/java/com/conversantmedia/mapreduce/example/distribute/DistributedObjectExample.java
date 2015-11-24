@@ -72,7 +72,7 @@ public class DistributedObjectExample {
 	public Set<String> getBlacklist() throws IOException {
 		Set<String> blacklist = null;
 		if (StringUtils.isNotBlank(context.blacklist)) {
-			blacklist = new HashSet<String>();
+			blacklist = new HashSet<>();
 			InputStreamReader reader = null;
 			try {
 				FileSystem fs = FileSystem.get(new Configuration());
@@ -102,6 +102,6 @@ public class DistributedObjectExample {
 
 		public String getMinimum() {
 			return this.minimum;
-		};
+		}
 	}
 }

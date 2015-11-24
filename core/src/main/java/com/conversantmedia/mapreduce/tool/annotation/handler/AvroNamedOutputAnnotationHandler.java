@@ -41,7 +41,7 @@ import com.conversantmedia.mapreduce.tool.annotation.AvroNamedOutput;
 @Service
 public class AvroNamedOutputAnnotationHandler extends AvroAnnotationHandlerBase {
 
-	private Set<String> configured = new HashSet<String>();
+	private final Set<String> configured = new HashSet<>();
 
 	@Override
 	public boolean accept(Annotation annotation) throws ToolException {

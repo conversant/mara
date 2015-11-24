@@ -20,17 +20,7 @@ package com.conversantmedia.mapreduce.io;
  * #L%
  */
 
-
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import com.conversantmedia.mapreduce.tool.annotation.MapperService;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.LongWritable;
@@ -44,27 +34,31 @@ import org.apache.hadoop.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.conversantmedia.mapreduce.io.CompositeSortKey;
-import com.conversantmedia.mapreduce.io.CompositeSortKeySerialization;
-import com.conversantmedia.mapreduce.tool.annotation.MapperService;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CompositeSortKeyTest {
 
-	private TestMapper mapper;
-	private TestReducer reducer;
-	private MapReduceDriver<LongWritable, Text, CompositeSortKey<Text,IntWritable>, Text, Text, NullWritable> driver;
+	private MapReduceDriver<LongWritable, Text, CompositeSortKey<Text, IntWritable>, Text, Text, NullWritable> driver;
 
-	@Test @SuppressWarnings("unchecked")
+	@Test
 	public void naturalSortComparator() {
 
-		CompositeSortKey<Text,Text> A1 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("1"));
-		CompositeSortKey<Text,Text> A2 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("2"));
-		CompositeSortKey<Text,Text> B1 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("1"));
-		CompositeSortKey<Text,Text> B2 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("2"));
-		CompositeSortKey<Text,Text> C1 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("1"));
-		CompositeSortKey<Text,Text> C2 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("2"));
+		CompositeSortKey<Text, Text> A1 = new CompositeSortKey<>(new Text("A"), new Text("1"));
+		CompositeSortKey<Text, Text> A2 = new CompositeSortKey<>(new Text("A"), new Text("2"));
+		CompositeSortKey<Text, Text> B1 = new CompositeSortKey<>(new Text("B"), new Text("1"));
+		CompositeSortKey<Text, Text> B2 = new CompositeSortKey<>(new Text("B"), new Text("2"));
+		CompositeSortKey<Text, Text> C1 = new CompositeSortKey<>(new Text("C"), new Text("1"));
+		CompositeSortKey<Text, Text> C2 = new CompositeSortKey<>(new Text("C"), new Text("2"));
 
-		List<CompositeSortKey<Text,Text>> keyList = new ArrayList<CompositeSortKey<Text,Text>>();
+		List<CompositeSortKey<Text, Text>> keyList = new ArrayList<>();
 
 		keyList.add(C2);
 		keyList.add(A2);
@@ -74,27 +68,27 @@ public class CompositeSortKeyTest {
 		keyList.add(B1);
 
 		Collections.sort(keyList,
-				new CompositeSortKey.NaturalSortComparator());
+				new CompositeSortKey.NaturalSortComparator<Text, Text>());
 
-		String[] expected = new String[]{"A1","A2","B1","B2","C1","C2"};
+		String[] expected = new String[]{"A1", "A2", "B1", "B2", "C1", "C2"};
 		int idx = 0;
-		for (CompositeSortKey<Text,Text> key : keyList) {
+		for (CompositeSortKey<Text, Text> key : keyList) {
 			assertThat(key.getGroupKey().toString() + key.getSortKey().toString(),
 					equalTo(expected[idx++]));
 		}
 	}
 
-	@Test @SuppressWarnings("unchecked")
+	@Test
 	public void reverseSortComparator() {
 
-		CompositeSortKey<Text,Text> A1 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("1"));
-		CompositeSortKey<Text,Text> A2 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("2"));
-		CompositeSortKey<Text,Text> B1 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("1"));
-		CompositeSortKey<Text,Text> B2 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("2"));
-		CompositeSortKey<Text,Text> C1 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("1"));
-		CompositeSortKey<Text,Text> C2 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("2"));
+		CompositeSortKey<Text, Text> A1 = new CompositeSortKey<>(new Text("A"), new Text("1"));
+		CompositeSortKey<Text, Text> A2 = new CompositeSortKey<>(new Text("A"), new Text("2"));
+		CompositeSortKey<Text, Text> B1 = new CompositeSortKey<>(new Text("B"), new Text("1"));
+		CompositeSortKey<Text, Text> B2 = new CompositeSortKey<>(new Text("B"), new Text("2"));
+		CompositeSortKey<Text, Text> C1 = new CompositeSortKey<>(new Text("C"), new Text("1"));
+		CompositeSortKey<Text, Text> C2 = new CompositeSortKey<>(new Text("C"), new Text("2"));
 
-		List<CompositeSortKey<Text,Text>> keyList = new ArrayList<CompositeSortKey<Text,Text>>();
+		List<CompositeSortKey<Text, Text>> keyList = new ArrayList<>();
 
 		keyList.add(C2);
 		keyList.add(A2);
@@ -104,27 +98,27 @@ public class CompositeSortKeyTest {
 		keyList.add(B1);
 
 		Collections.sort(keyList,
-				new CompositeSortKey.ReverseSortComparator());
+				new CompositeSortKey.ReverseSortComparator<Text, Text>());
 
-		String[] expected = new String[]{"A2","A1","B2","B1","C2","C1"};
+		String[] expected = new String[]{"A2", "A1", "B2", "B1", "C2", "C1"};
 		int idx = 0;
-		for (CompositeSortKey<Text,Text> key : keyList) {
+		for (CompositeSortKey<Text, Text> key : keyList) {
 			assertThat(key.getGroupKey().toString() + key.getSortKey().toString(),
 					equalTo(expected[idx++]));
 		}
 	}
 
-	@Test @SuppressWarnings("unchecked")
+	@Test
 	public void groupingComparator() {
 
-		CompositeSortKey<Text,Text> A1 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("1"));
-		CompositeSortKey<Text,Text> A2 = new CompositeSortKey<Text,Text>(new Text("A"), new Text("2"));
-		CompositeSortKey<Text,Text> B1 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("1"));
-		CompositeSortKey<Text,Text> B2 = new CompositeSortKey<Text,Text>(new Text("B"), new Text("2"));
-		CompositeSortKey<Text,Text> C1 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("1"));
-		CompositeSortKey<Text,Text> C2 = new CompositeSortKey<Text,Text>(new Text("C"), new Text("2"));
+		CompositeSortKey<Text, Text> A1 = new CompositeSortKey<>(new Text("A"), new Text("1"));
+		CompositeSortKey<Text, Text> A2 = new CompositeSortKey<>(new Text("A"), new Text("2"));
+		CompositeSortKey<Text, Text> B1 = new CompositeSortKey<>(new Text("B"), new Text("1"));
+		CompositeSortKey<Text, Text> B2 = new CompositeSortKey<>(new Text("B"), new Text("2"));
+		CompositeSortKey<Text, Text> C1 = new CompositeSortKey<>(new Text("C"), new Text("1"));
+		CompositeSortKey<Text, Text> C2 = new CompositeSortKey<>(new Text("C"), new Text("2"));
 
-		List<CompositeSortKey<Text,Text>> keyList = new ArrayList<CompositeSortKey<Text,Text>>();
+		List<CompositeSortKey<Text, Text>> keyList = new ArrayList<>();
 
 		keyList.add(C2);
 		keyList.add(A2);
@@ -134,16 +128,15 @@ public class CompositeSortKeyTest {
 		keyList.add(B1);
 
 		Collections.sort(keyList,
-				new CompositeSortKey.GroupingComparator());
+				new CompositeSortKey.GroupingComparator<Text, Text>());
 
-		String[] expected = new String[]{"A","A","B","B","C","C"};
+		String[] expected = new String[]{"A", "A", "B", "B", "C", "C"};
 		int idx = 0;
-		for (CompositeSortKey<Text,Text> key : keyList) {
+		for (CompositeSortKey<Text, Text> key : keyList) {
 			System.out.println(key);
 			assertThat(key.getGroupKey().toString(), equalTo(expected[idx++]));
 		}
 	}
-
 
 	@Test
 	public void testNaturalSortByValue() {
@@ -153,24 +146,23 @@ public class CompositeSortKeyTest {
 
 		// Outputs should be properly sorted...
 		// First 'A'
-		for (int i = 0; i < offset*3; i++) {
+		for (int i = 0; i < offset * 3; i++) {
 			driver.addOutput(new Text("A" + i), NullWritable.get());
 		}
 		// And 'B'
-		for (int i = 0; i < offset*3; i++) {
+		for (int i = 0; i < offset * 3; i++) {
 			driver.addOutput(new Text("B" + i), NullWritable.get());
 		}
 
 		try {
 			driver.runTest();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
-
+		catch (IOException e) {
+			fail(e.getMessage());
+		}
 	}
 
-	@Test @SuppressWarnings("unchecked")
+	@Test
 	public void testReverseSortByValue() {
 		// Add in a non-sorted order
 		int offset = 50;
@@ -178,27 +170,27 @@ public class CompositeSortKeyTest {
 
 		// Outputs should be properly sorted...
 		// First 'A'
-		for (int i = offset*3-1; i > -1; i--) {
+		for (int i = offset * 3 - 1; i > -1; i--) {
 			driver.addOutput(new Text("A" + i), NullWritable.get());
 		}
 		// And 'B'
-		for (int i = offset*3-1; i > -1; i--) {
+		for (int i = offset * 3 - 1; i > -1; i--) {
 			driver.addOutput(new Text("B" + i), NullWritable.get());
 		}
 
 		try {
-			driver.setKeyOrderComparator(new CompositeSortKey.ReverseSortComparator());
+			driver.setKeyOrderComparator(new CompositeSortKey.ReverseSortComparator<Text, IntWritable>());
 			driver.runTest();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		}
+		catch (IOException e) {
+			fail(e.getMessage());
 		}
 	}
 
 	private void setupInputs(int offset) {
 		for (int i = 0; i < offset; i++) {
-			int i2 = i+offset;
-			int i3 = i+offset*2;
+			int i2 = i + offset;
+			int i3 = i + offset * 2;
 			driver.addInput(new LongWritable(i3), new Text("B," + i3 + ",B" + i3));
 			driver.addInput(new LongWritable(i), new Text("B," + i + ",B" + i));
 			driver.addInput(new LongWritable(i2), new Text("A," + i2 + ",A" + i2));
@@ -208,10 +200,10 @@ public class CompositeSortKeyTest {
 		}
 	}
 
-	@Before @SuppressWarnings("unchecked")
+	@Before
 	public void setup() {
-		mapper = new TestMapper();
-		reducer = new TestReducer();
+		TestMapper mapper = new TestMapper();
+		TestReducer reducer = new TestReducer();
 		driver = MapReduceDriver.newMapReduceDriver(mapper, reducer);
 
 		Configuration conf = driver.getConfiguration();
@@ -221,31 +213,32 @@ public class CompositeSortKeyTest {
 		CompositeSortKeySerialization.configureMapOutputKey(job, Text.class, IntWritable.class);
 
 		// MRUnit sets these differently than standard MapReduce:
-		driver.setKeyGroupingComparator(new CompositeSortKey.GroupingComparator());
+		driver.setKeyGroupingComparator(new CompositeSortKey.GroupingComparator<Text, IntWritable>());
 	}
 
 	@MapperService
-	public static class TestMapper extends Mapper<LongWritable, Text, CompositeSortKey<Text,IntWritable>, Text> {
+	public static class TestMapper extends Mapper<LongWritable, Text, CompositeSortKey<Text, IntWritable>, Text> {
 
-		private final CompositeSortKey<Text, IntWritable> KEY = new CompositeSortKey<Text, IntWritable>();
+		private final CompositeSortKey<Text, IntWritable> KEY = new CompositeSortKey<>();
 		private final Text VALUE = new Text();
 
 		@Override
 		public void map(LongWritable key, Text value, Context context)
 				throws IOException, InterruptedException {
 			String[] data = StringUtils.split(value.toString());
+			assertNotNull("did not parse", data);
+			assertTrue("did not find any content", data.length > 0);
 			KEY.setGroupKey(new Text(data[0]));
 			KEY.setSortKey(new IntWritable(Integer.valueOf(data[1])));
 			VALUE.set(data[2]);
 			context.write(KEY, VALUE);
 		}
-
 	}
 
-	private static final class TestReducer extends Reducer<CompositeSortKey<Text,IntWritable>, Text, Text, NullWritable> {
+	private static final class TestReducer extends Reducer<CompositeSortKey<Text, IntWritable>, Text, Text, NullWritable> {
 
 		@Override
-		protected void reduce(CompositeSortKey<Text,IntWritable> key, Iterable<Text> values, Context context)
+		protected void reduce(CompositeSortKey<Text, IntWritable> key, Iterable<Text> values, Context context)
 				throws IOException, InterruptedException {
 			//System.out.println("KEY: " + key.toString());
 			for (Text value : values) {
@@ -253,6 +246,5 @@ public class CompositeSortKeyTest {
 				context.write(new Text(value), NullWritable.get());
 			}
 		}
-
 	}
 }

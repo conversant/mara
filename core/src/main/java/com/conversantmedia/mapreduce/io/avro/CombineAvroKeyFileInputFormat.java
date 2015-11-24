@@ -54,7 +54,7 @@ public class CombineAvroKeyFileInputFormat<T> extends CombineFileInputFormat<Avr
 	@Override
 	protected List<FileStatus> listStatus(JobContext job) throws IOException {
 		// Get the list from our parent...
-		List<FileStatus> result = new ArrayList<FileStatus>();
+		List<FileStatus> result = new ArrayList<>();
 
 		// Loop through and remove any that are empty
 		for (FileStatus file : super.listStatus(job)) {
@@ -85,7 +85,7 @@ public class CombineAvroKeyFileInputFormat<T> extends CombineFileInputFormat<Avr
 
 		private AvroKeyRecordReader<T> delegate;
 
-		private Integer splitIndex;
+		private final Integer splitIndex;
 
 		public DelegatingAvroRecordReader(CombineFileSplit split,
 				TaskAttemptContext context, Integer splitIndex) {
@@ -95,7 +95,7 @@ public class CombineAvroKeyFileInputFormat<T> extends CombineFileInputFormat<Avr
 			  logger().info("Using a reader schema equal to the writer schema.");
 			}
 			this.splitIndex = splitIndex;
-			delegate = new AvroKeyRecordReaderSkipBad<T>(readerSchema);
+			delegate = new AvroKeyRecordReaderSkipBad<>(readerSchema);
 		}
 
 		@Override

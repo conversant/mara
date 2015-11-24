@@ -64,14 +64,14 @@ public class AvroInputOutputMapperTest extends
 		try {
 			records = helper.getRecords("src/test/resources/shakespeare_counts.avro");
 			for (AvroExample record : records) {
-				driver.addInput(new Pair<AvroKey<AvroExample>, NullWritable>(new AvroKey<AvroExample>(record), NullWritable.get()));
+				driver.addInput(new Pair<>(new AvroKey<>(record), NullWritable.get()));
 			}
 
 			AvroExample.Builder builder = AvroExample.newBuilder();
 			builder.setWord("the");
 			builder.setFrequency(23437l);
-			AvroKey<AvroExample> avroKey = new AvroKey<AvroExample>(builder.build());
-			driver.addOutput(new Pair<AvroKey<AvroExample>, NullWritable>(avroKey, NullWritable.get()));
+			AvroKey<AvroExample> avroKey = new AvroKey<>(builder.build());
+			driver.addOutput(new Pair<>(avroKey, NullWritable.get()));
 
 			driver.runTest();
 		}

@@ -82,7 +82,7 @@ public class AnnotatedTestTool  {
 		System.out.println("Output path is: " + this.context.getOutput());
 		System.out.println("Archive path is: " + this.context.getArchive());
 		System.out.println("My Property = " + this.context.getMyProperty());
-	};
+	}
 
 	@JobInit
 	public void initJob() {
@@ -99,7 +99,7 @@ public class AnnotatedTestTool  {
 		return "Hello, World!";
 	}
 
-	public static class TestToolListener2 extends TestToolListener{	};
+	public static class TestToolListener2 extends TestToolListener{	}
 
 	public static class TestToolListener implements ToolListener<TestToolContext> {
 
