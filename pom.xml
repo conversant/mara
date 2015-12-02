@@ -76,7 +76,8 @@
 		<aspectj.version>1.8.2</aspectj.version>
 		<aspectj.compliance.level>1.7</aspectj.compliance.level>
 		<powermock.version>1.5.4</powermock.version>
-		<avro.version>1.7.6</avro.version>
+		<avro.version>1.7.6-cdh5.4.5</avro.version>
+		<packaging.base.version>2.24</packaging.base.version>
 	</properties>
 
 	<dependencyManagement>
