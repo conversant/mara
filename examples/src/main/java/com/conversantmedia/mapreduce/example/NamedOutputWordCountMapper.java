@@ -44,7 +44,7 @@ public class NamedOutputWordCountMapper extends Mapper<LongWritable, Text, Text,
 	@NamedOutput("DEBUG")
 	private MultipleOutputs<Text, Text> multiOut;
 
-	private Text word = new Text();
+	private final Text word = new Text();
 
 	@Override
 	protected void map(LongWritable key, Text value, Context context)

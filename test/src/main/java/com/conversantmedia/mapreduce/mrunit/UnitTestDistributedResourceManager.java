@@ -50,11 +50,11 @@ public class UnitTestDistributedResourceManager {
 	@SuppressWarnings("rawtypes") 
 	public void setupDistributedResources(String testName, Class<?> clazz, Object testBean, Mapper mapper, Reducer reducer) throws Exception {
 		// Search for annotated resources to distribute
-		List<String> properties = new ArrayList<String>();
+		List<String> properties = new ArrayList<>();
 		addDistributedProperties(clazz, properties);
 
 		// Now retrieve property values from unit test bean
-		Map<String, Object> values = new HashMap<String, Object>();
+		Map<String, Object> values = new HashMap<>();
 		for (String property : properties) {
 			// First look for test-specific getter suffix'd by the test name:
 			String testProperty = property + "_" + testName;

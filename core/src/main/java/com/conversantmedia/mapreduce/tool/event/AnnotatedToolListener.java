@@ -20,13 +20,9 @@ package com.conversantmedia.mapreduce.tool.event;
  * #L%
  */
 
-
+import com.conversantmedia.mapreduce.tool.AnnotatedToolContext;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Options;
-
-import com.conversantmedia.mapreduce.tool.AnnotatedToolContext;
-import com.conversantmedia.mapreduce.tool.event.ToolEvent;
-import com.conversantmedia.mapreduce.tool.event.ToolListener;
 
 /**
  * Wraps the annotation-specified listener and adapt between the
@@ -36,7 +32,7 @@ import com.conversantmedia.mapreduce.tool.event.ToolListener;
  */
 public class AnnotatedToolListener implements ToolListener<AnnotatedToolContext> {
 
-	private ToolListener<Object> delegate;
+	private final ToolListener<Object> delegate;
 
 	public AnnotatedToolListener(ToolListener<Object> delegate) {
 		this.delegate = delegate;

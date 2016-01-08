@@ -45,9 +45,9 @@ public class AvroMultiSerializer<T>
 	private static final int AVRO_ENCODER_BLOCK_SIZE_BYTES = 512;
 
 	/** An factory for creating Avro datum encoders. */
-	private static EncoderFactory ENCODER_FACTORY = new EncoderFactory().configureBlockSize(AVRO_ENCODER_BLOCK_SIZE_BYTES);
+	private static final EncoderFactory ENCODER_FACTORY = new EncoderFactory().configureBlockSize(AVRO_ENCODER_BLOCK_SIZE_BYTES);
 
-	private Map<Class<T>, DatumWriter<T>> writers;
+	private final Map<Class<T>, DatumWriter<T>> writers;
 
 	private BinaryEncoder encoder;
 
@@ -55,7 +55,7 @@ public class AvroMultiSerializer<T>
 
 	public AvroMultiSerializer(Configuration conf) {
 		super(conf);
-		writers = new HashMap<Class<T>,DatumWriter<T>>();
+		writers = new HashMap<>();
 	}
 
 	@Override @SuppressWarnings("unchecked")
@@ -71,7 +71,7 @@ public class AvroMultiSerializer<T>
 		DatumWriter<T> writer = writers.get(c);
 		if (writer == null) {
 			// Construct a new reader for this schema.
-			writer = new ReflectDatumWriter<T>(c);
+			writer = new ReflectDatumWriter<>(c);
 			writers.put(c, writer);
 		}
 		return writer;

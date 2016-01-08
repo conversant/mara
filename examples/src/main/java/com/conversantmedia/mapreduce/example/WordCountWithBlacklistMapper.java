@@ -50,7 +50,7 @@ public class WordCountWithBlacklistMapper extends Mapper<LongWritable, Text, Tex
 	@Resource
 	private Path blacklist;
 
-	private Text word = new Text();
+	private final Text word = new Text();
 
 	private Set<String> blacklistedWords;
 
@@ -70,7 +70,7 @@ public class WordCountWithBlacklistMapper extends Mapper<LongWritable, Text, Tex
 
 	@Override
 	public void setup(Context context) throws IOException {
-		blacklistedWords = new HashSet<String>();
+		blacklistedWords = new HashSet<>();
 		if (blacklist != null) {
 			InputStreamReader reader = null;
 			try {

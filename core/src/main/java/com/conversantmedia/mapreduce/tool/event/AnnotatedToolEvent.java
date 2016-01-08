@@ -26,11 +26,10 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 
 import com.conversantmedia.mapreduce.tool.AnnotatedToolContext;
-import com.conversantmedia.mapreduce.tool.event.ToolEvent;
 
 public class AnnotatedToolEvent implements ToolEvent<Object> {
 
-	private AnnotatedToolContext context;
+	private final AnnotatedToolContext context;
 
 	public AnnotatedToolEvent(ToolEvent<AnnotatedToolContext> parent) {
 		this.context = parent.getContext();

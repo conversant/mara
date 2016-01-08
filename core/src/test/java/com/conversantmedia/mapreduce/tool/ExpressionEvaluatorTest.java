@@ -44,7 +44,7 @@ public class ExpressionEvaluatorTest {
 		Map contextMap = new HashMap();
 		contextMap.put("context", ctxBean);
 
-		Map<String, Object> expressions = new HashMap<String, Object>();
+		Map<String, Object> expressions = new HashMap<>();
 		expressions.put("${name}", ((ToolBean)rootObj).name);
 		// not yet working
 //		expressions.put("${context.privateMember}", ctxBean.privateMember);
@@ -71,7 +71,7 @@ public class ExpressionEvaluatorTest {
 	}
 
 	protected static final class ToolBean {
-		public String name = "aTool";
+		public final String name = "aTool";
 		@SuppressWarnings("unused")
 		private String notInvoked = "Not Invoked";
 

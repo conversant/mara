@@ -47,12 +47,12 @@ public class MultiSchemaAvroSerialization<T> extends Configured implements Seria
 
 	@Override
 	public Deserializer<AvroMultiWrapper<T>> getDeserializer(Class<AvroMultiWrapper<T>> c) {
-		return new AvroMultiDeserializer<T>(getConf());
+		return new AvroMultiDeserializer<>(getConf());
 	}
 
 	@Override
 	public Serializer<AvroMultiWrapper<T>> getSerializer(Class<AvroMultiWrapper<T>> c) {
-		return new AvroMultiSerializer<T>(getConf());
+		return new AvroMultiSerializer<>(getConf());
 	}
 
 	protected static Schema getSchemaAt(Configuration conf, int b) {
@@ -122,7 +122,7 @@ public class MultiSchemaAvroSerialization<T> extends Configured implements Seria
 
 	}
 
-	protected static final Logger logger() {
+	protected static Logger logger() {
 		return LoggerFactory.getLogger(MultiSchemaAvroSerialization.class);
 	}
 

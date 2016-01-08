@@ -46,7 +46,7 @@ public class DistributedResourceManagerTest {
 		Object bean = new TargetBean();
 
 
-		Map<String, String> fieldVals = new HashMap<String,String>();
+		Map<String, String> fieldVals = new HashMap<>();
 		fieldVals.put("b","true");
 		fieldVals.put("c","a");
 		fieldVals.put("i","475");

@@ -90,7 +90,7 @@ public class ToolContext {
 	private ToolContextListener contextListener;
 
 	// A unique id for our context
-	private String id = UUID.randomUUID().toString();
+	private final String id = UUID.randomUUID().toString();
 
 	private Path[] input;
 
@@ -323,7 +323,7 @@ public class ToolContext {
 	 * 
 	 * @param line	the command line
 	 */
-	private final void populateContext(CommandLine line) throws ParseException {
+	private void populateContext(CommandLine line) throws ParseException {
 		String[] inputPaths = StringUtils.split(line.getOptionValue(OPTION_INPUT_PATH), ",");
 		Path[] input = new Path[inputPaths.length];
 		for (int i = 0; i < input.length; i++) {
@@ -505,7 +505,7 @@ public class ToolContext {
 	public String toString() {
 		int lc = getLeftColumnWidth(), rc = getRightColumnWidth();
 		StringBuffer buf = new StringBuffer();
-		buf.append("\n" + getClass().getSimpleName() + ":\n");
+		buf.append("\n").append(getClass().getSimpleName()).append(":\n");
 		buf.append(StringUtils.repeat("=", lc + rc));
 		buf.append("\n");
 		argsToString(buf, lc, rc);

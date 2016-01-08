@@ -163,8 +163,8 @@ K1, V1, K2, V2, T extends TestDriver<K2, V2, T>> {
 		}
 
 		// Named outputs?
-		namedOutputs = new HashMap<String, MultipleOutputs>();
-		avroNamedOutputs = new HashMap<String, AvroMultipleOutputs>();
+		namedOutputs = new HashMap<>();
+		avroNamedOutputs = new HashMap<>();
 		if (this.mapper != null) {
 			setupMultipleOutputs(this.mapper);
 		}

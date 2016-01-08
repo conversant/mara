@@ -48,17 +48,17 @@ public class CombineTextFileInputFormat extends CombineFileInputFormat<FileLineW
 	@Override
 	public RecordReader<FileLineWritable, Text> createRecordReader(
 			InputSplit split, TaskAttemptContext context) throws IOException {
-		return new CombineFileRecordReader<FileLineWritable, Text>(
+		return new CombineFileRecordReader<>(
 				(CombineFileSplit)split, context,FileLineWritableRecordReader.class);
 	}
 
 	public static class FileLineWritableRecordReader extends RecordReader<FileLineWritable, Text> {
 
-		private LineRecordReader delegate;
+		private final LineRecordReader delegate;
 
 		private String fileName;
 
-		private int splitIndex;
+		private final int splitIndex;
 
 		public FileLineWritableRecordReader(CombineFileSplit split,
 				TaskAttemptContext context, Integer splitIndex) {

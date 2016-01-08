@@ -58,29 +58,29 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 	private static final String DEFAULT_ANNOTATION_HANDLER_PROVIDER = "com.conversantmedia.mapreduce.tool.annotation.handler.ReflectionAnnotationHandlerProvider";
 
 	// The user's annotated tool bean
-	private Object tool;
+	private final Object tool;
 
 	// The parent context
 	private AnnotatedToolContext context;
 
 	// The field for the tool context.
-	private Field contextField;
+	private final Field contextField;
 
 	// The field with the job.
-	private Field jobField;
+	private final Field jobField;
 
 	// The method (if any) for initializing the annotated tool
-	private List<Method> driverInitMethod;
+	private final List<Method> driverInitMethod;
 	
 	// Methods to be called to validate CLI arguments
-	private List<Method> validateMethod;
+	private final List<Method> validateMethod;
 
 	// The method (if any) for initializing the annotated tool
 	// immediately following job construction.
-	private List<Method> jobInitMethod;
+	private final List<Method> jobInitMethod;
 
 	// The method (if any) to call before existing.
-	private Method cleanupMethod;
+	private final Method cleanupMethod;
 
 	@SuppressWarnings("unchecked")
 	public AnnotatedTool(Object tool) {
@@ -102,7 +102,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 
 	@Override
 	public void init(AnnotatedToolContext context) throws ToolException, ParseException {
-		List<Method> methods = new ArrayList<Method>();
+		List<Method> methods = new ArrayList<>();
 		if (this.validateMethod != null) {
 			methods.addAll(this.validateMethod);
 		}
@@ -124,7 +124,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 				// If any of these throws a ParseException, treat pass
 				// that up so we can output the CLI help message instead of 
 				// a full stack trace.
-				throw new ParseException(e.getCause().getMessage());
+				throw new ToolException(e.getCause().getMessage());
 			}
 			throw new ToolException(findRootException(e.getCause()));
 		} catch (IllegalAccessException | IllegalArgumentException e) {
@@ -169,7 +169,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 	@Override
 	protected void jobPostInit(AnnotatedToolContext context) throws ToolException {
 		Job job = context.getJob();
-		DistributedResourceManager distManager = new DistributedResourceManager(job.getConfiguration());
+		DistributedResourceManager distManager = new DistributedResourceManager(job);
 		try {
 			// Configure resources for the tool and context
 			distManager.configureBeanDistributedResources(this.tool);
@@ -242,7 +242,7 @@ public class AnnotatedTool extends BaseTool<AnnotatedToolContext> {
 	 * @throws Exception
 	 */
 	private Job buildJobFromAnnotation(AnnotatedToolContext context) throws Exception {
-		Job job = new Job(getConf());
+		Job job = Job.getInstance(getConf());
 		MaraAnnotationUtil.INSTANCE.configureJobFromField(job, jobField, this.tool, context);
 		return job;
 	}

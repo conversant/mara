@@ -84,7 +84,7 @@ public class RunJobTest {
 	@Test @SuppressWarnings({"unchecked"})
 	public void testOutputDrivers() {
 
-		Map<String, DriverMeta> drivers = new HashMap<String, DriverMeta>();
+		Map<String, DriverMeta> drivers = new HashMap<>();
 		// To avoid vararg null warnings...
 		Class<? extends ToolListener<?>> nullListener = null;
 		drivers.put("driverB", new DriverMeta("driverA",

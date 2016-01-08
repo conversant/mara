@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -66,7 +65,7 @@ public enum MaraAnnotationUtil {
 	public void registerAnnotationHandler(MaraAnnotationHandler handler, AnnotatedTool driver) throws ToolException {
 		if (this.annotationHandlers == null) {
 			// retain order to ensure default handlers, added last, run last.
-			this.annotationHandlers = new LinkedHashSet<MaraAnnotationHandler>();
+			this.annotationHandlers = new LinkedHashSet<>();
 		}
 		this.annotationHandlers.add(handler);
 		handler.initialize(driver);
@@ -162,7 +161,7 @@ public enum MaraAnnotationUtil {
 	protected void handleJobFieldAnnotations(Job job, Field jobField, JobInfo jobInfo)
 			throws ToolException {
 		// Create a list of annotations to handle.
-		List<Annotation> annotations = new ArrayList<Annotation>();
+		List<Annotation> annotations = new ArrayList<>();
 
 		// First add in any JobInfo nested annotations that are present.
 		addNestedAnnotations(annotations,
@@ -216,7 +215,7 @@ public enum MaraAnnotationUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Field> findAnnotatedFields(Class<?> clazz, Class<? extends Annotation>...annotationClasses) {
-		List<Field> fields = new ArrayList<Field>();
+		List<Field> fields = new ArrayList<>();
 		for (Field field : clazz.getDeclaredFields()) {
 			for (Class<? extends Annotation> annotationClass : annotationClasses) {
 				if (field.isAnnotationPresent(annotationClass)) {
@@ -255,7 +254,7 @@ public enum MaraAnnotationUtil {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<Method> findAnnotatedMethods(Class<?> clazz, Class<? extends Annotation>...annotationClasses) {
-		List<Method> methods = new ArrayList<Method>();
+		List<Method> methods = new ArrayList<>();
 		for (Method method : clazz.getDeclaredMethods()) {
 			for (Class<? extends Annotation> annotationClass : annotationClasses) {
 				if (AnnotationUtils.findAnnotation(method, annotationClass) != null) {
@@ -347,7 +346,7 @@ public enum MaraAnnotationUtil {
 		}
 		else {
 			// Search the classpath for the properties file. If not, use default
-			List<String> packages = new ArrayList<String>();
+			List<String> packages = new ArrayList<>();
 			InputStream resourceStream = null;
 			try {
 				if (resource != null) {
@@ -364,7 +363,7 @@ public enum MaraAnnotationUtil {
 				IOUtils.closeQuietly(resourceStream);
 			}
 
-			return packages.toArray(new String[]{});
+			return packages.toArray(new String[packages.size()]);
 		}
 	}
 }

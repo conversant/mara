@@ -88,9 +88,9 @@ public class BloomFilterOutputFormat<K, V> extends TextOutputFormat<K, V> {
 	 */
 	protected static class BloomFilterRecordWriter<K, V> extends RecordWriter<K,V> {
 
-		private StringBloomFilter bloomFilter;
+		private final StringBloomFilter bloomFilter;
 
-		protected DataOutputStream out;
+		protected final DataOutputStream out;
 
 		public BloomFilterRecordWriter(DataOutputStream out, int expected) {
 			this.out = out;
@@ -125,7 +125,7 @@ public class BloomFilterOutputFormat<K, V> extends TextOutputFormat<K, V> {
 			FileSystem fs = file.getFileSystem(conf);
 			FSDataOutputStream fileOut = fs.create(file, false);
 
-			writer = new BloomFilterRecordWriter<K, V>(fileOut, size);
+			writer = new BloomFilterRecordWriter<>(fileOut, size);
 		}
 		return writer;
 	}
