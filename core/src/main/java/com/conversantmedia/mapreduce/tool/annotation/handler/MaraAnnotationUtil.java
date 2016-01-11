@@ -134,8 +134,8 @@ public enum MaraAnnotationUtil {
 
 	private void configureJobFromAnnotations(Job job, Annotation[] annotations, Object target)
 			throws ToolException {
-		for (Annotation annotation : annotations) {
-			for (MaraAnnotationHandler handler : this.annotationHandlers) {
+		for (MaraAnnotationHandler handler : this.annotationHandlers) {
+			for (Annotation annotation : annotations) {
 				if (handler.accept(annotation)) {
 					handler.process(annotation, job, target);
 				}
@@ -173,8 +173,8 @@ public enum MaraAnnotationUtil {
 		annotations.addAll(Arrays.asList(jobField.getAnnotations()));
 
 		// Now run them all through appropriate handlers if one is registered
-		for (Annotation annotation : annotations) {
-			for (MaraAnnotationHandler handler : this.annotationHandlers) {
+		for (MaraAnnotationHandler handler : this.annotationHandlers) {
+			for (Annotation annotation : annotations) {
 				if (handler.accept(annotation)) {
 					handler.process(annotation, job, jobField);
 				}
