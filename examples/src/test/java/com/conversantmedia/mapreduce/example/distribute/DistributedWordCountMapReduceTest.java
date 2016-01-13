@@ -44,7 +44,7 @@ public class DistributedWordCountMapReduceTest
 
 	@SuppressWarnings("unused")
 	private Set<String> getBlacklist_runMyTest() {
-		Set<String> words = new HashSet<String>();
+		Set<String> words = new HashSet<>();
 		words.add("RunMyTest");
 		return words;
 	}
@@ -60,8 +60,8 @@ public class DistributedWordCountMapReduceTest
 	@Test @SuppressWarnings({ "rawtypes", "unchecked" })
 	public void runMyTest() {
 
-		List<Pair<LongWritable, Text>> inputs = new ArrayList<Pair<LongWritable, Text>>();
-		inputs.add(new Pair<LongWritable, Text>(
+		List<Pair<LongWritable, Text>> inputs = new ArrayList<>();
+		inputs.add(new Pair<>(
 				new LongWritable(1), new Text("the quick brown fox jumped over the lazy dog.")));
 
 		MapReduceDriver driver = getTestDriver();

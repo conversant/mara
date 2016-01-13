@@ -127,7 +127,7 @@ public class ReflectionAnnotationHandlerProviderTest {
     }
 
     private List<MaraAnnotationHandler> getMaraAnnotationHandlers() throws ToolException {
-        List<MaraAnnotationHandler> results = new ArrayList<MaraAnnotationHandler>();
+        List<MaraAnnotationHandler> results = new ArrayList<>();
         for (MaraAnnotationHandler handler : provider.handlers()) {
             results.add(handler);
 //                System.out.println(handler.getClass().getName());

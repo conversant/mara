@@ -20,16 +20,13 @@ package com.conversantmedia.mapreduce.tool.event;
  * #L%
  */
 
-
+import com.conversantmedia.mapreduce.tool.ToolContext;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.mapreduce.Job;
 
-import com.conversantmedia.mapreduce.tool.ToolContext;
-import com.conversantmedia.mapreduce.tool.event.ToolEvent;
-
 public class DefaultToolEvent<T extends ToolContext> implements ToolEvent<T> {
 
-	private T context;
+	private final T context;
 
 	public DefaultToolEvent(T context) {
 		this.context = context;
@@ -49,5 +46,4 @@ public class DefaultToolEvent<T extends ToolContext> implements ToolEvent<T> {
 	public Configuration getConf() {
 		return this.context.getJob().getConfiguration();
 	}
-
 }

@@ -41,7 +41,7 @@ import com.conversantmedia.mapreduce.tool.annotation.Option;
  */
 public class AnnotatedToolContext extends ToolContext {
 
-	private Object bean;
+	private final Object bean;
 
 	private Map<String, Field> fieldsMap;
 	private Map<String, Field> addedOptionsMap;
@@ -58,9 +58,9 @@ public class AnnotatedToolContext extends ToolContext {
 	@Override
 	protected void initExtraOptions(Options options) {
 		// Find all the fields with @Option annotations...
-		fieldsMap = new HashMap<String, Field>();
-		addedOptionsMap = new HashMap<String, Field>();
-		defaultValuesMap = new HashMap<String, String>();
+		fieldsMap = new HashMap<>();
+		addedOptionsMap = new HashMap<>();
+		defaultValuesMap = new HashMap<>();
 
 		Class<?> clazz = this.bean.getClass();
 		while (clazz != Object.class) {
@@ -91,8 +91,8 @@ public class AnnotatedToolContext extends ToolContext {
 
 	/**
 	 * Override the
-	 * @param opt
-	 * @param option
+	 * @param source
+	 * @param base
 	 */
 	private void updateOption(Option source,
 			org.apache.commons.cli.Option base) {
@@ -148,7 +148,7 @@ public class AnnotatedToolContext extends ToolContext {
 				if (line.hasOption(optName)) {
 					Object value = line.getOptionValue(optName);
 					if (value == null) {
-						value = new Boolean(true);
+						value = Boolean.TRUE;
 					}
 					value = converter.convertIfNecessary(value, field.getType());
 					field.set(this.bean, value);
@@ -173,7 +173,7 @@ public class AnnotatedToolContext extends ToolContext {
 		int lc = getLeftColumnWidth(), rc = getRightColumnWidth();
 		StringBuffer buf = new StringBuffer();
 		// Overriding this method solely to sub out the name in the output
-		buf.append("\n" + this.bean.getClass().getSimpleName() + ":\n");
+		buf.append("\n").append(this.bean.getClass().getSimpleName()).append(":\n");
 		buf.append(StringUtils.repeat("=", lc + rc));
 		buf.append("\n");
 		argsToString(buf, lc, rc);
