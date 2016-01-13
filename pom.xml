@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.conversantmedia</groupId>
 	<artifactId>mara-parent</artifactId>
-	<version>0.9.6-SNAPSHOT</version>
+	<version>0.9.6</version>
 	<packaging>pom</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<description>Mara - Java Annotations Framework for MapReduce on Hadoop</description>
@@ -36,7 +36,7 @@
 		<connection>scm:git:https://github.com/conversant/mara.git</connection>
 		<developerConnection>scm:git:https://github.com/conversant/mara.git</developerConnection>
 		<url>https://github.com/conversant/mara</url>
-		<tag>HEAD</tag>
+		<tag>0.9.6</tag>
 	</scm>
 
 	<distributionManagement>
