@@ -30,7 +30,6 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -86,7 +85,7 @@ import com.conversantmedia.mapreduce.tool.event.ToolListener;
 public abstract class BaseTool<T extends ToolContext>
 	extends Configured implements Tool, ToolListener<T> {
 
-	private List<ToolListener<T>> listeners = new ArrayList<ToolListener<T>>();
+	private final List<ToolListener<T>> listeners = new ArrayList<>();
 
 	private Type contextType;
 
@@ -202,21 +201,20 @@ public abstract class BaseTool<T extends ToolContext>
 	 */
 	protected void jobPostInit(T context) throws ToolException {
 		// Handle @Distribute annotation
-		distributeResources(context.getJob().getConfiguration(), this, context);
+		distributeResources(context.getJob(), this, context);
 	}
 
 	/**
 	 * Perform resource distribution on beans annotated
 	 * with @Distribute.
-	 * @param config			the job configuration
-	 * @param beans				resources to distribute. Any resource
-	 * 			must be serialize. At this time they must implement
-	 * 			java.io.Serializable.
-	 * @throws ToolException	If any of the objects is unable to be 
+	 * @param job			    the job configuration
+	 * @param beans			    resources to distribute. Any resource
+	 * 			must implement java.io.Serializable.
+	 * @throws ToolException	If any of the objects cannot be
 	 * 			serialized onto the distributed cache. 
 	 */
-	void distributeResources(Configuration config, Object...beans) throws ToolException {
-		DistributedResourceManager distManager = new DistributedResourceManager(config);
+	void distributeResources(Job job, Object...beans) throws ToolException {
+		DistributedResourceManager distManager = new DistributedResourceManager(job);
 		try {
 			for (Object bean : beans) {
 				distManager.configureBeanDistributedResources(bean);
@@ -254,10 +252,10 @@ public abstract class BaseTool<T extends ToolContext>
 
 	protected List<FileStatus> getInputFiles(Path input) throws IOException {
 		FileSystem fs = FileSystem.get(getConf());
-		List<FileStatus> status = new ArrayList<FileStatus>();
+		List<FileStatus> status = new ArrayList<>();
 		if (fs.exists(input)) {
 			FileStatus inputStatus = fs.getFileStatus(input);
-			if (inputStatus.isDir()) {
+			if (inputStatus.isDirectory()) {
 				// Move all files under this directory
 				status = Arrays.asList(fs.listStatus(input));
 			}
@@ -375,9 +373,7 @@ public abstract class BaseTool<T extends ToolContext>
 	 */
 	protected void dumpConfig(Configuration config) {
 		Console.out("Dumping Configuration:");
-		Iterator<Entry<String,String>> i = config.iterator();
-		while (i.hasNext()) {
-			Entry<String,String> entry = i.next();
+		for (Entry<String, String> entry : config) {
 			Console.out(entry.getKey() + " ==> " + entry.getValue());
 		}
 	}
@@ -391,7 +387,7 @@ public abstract class BaseTool<T extends ToolContext>
 	}
 
 	public void notifyListeners(ToolListener.Event eventType, T context, Object subject) throws Exception {
-		ToolEvent<T> event = new DefaultToolEvent<T>(context);
+		ToolEvent<T> event = new DefaultToolEvent<>(context);
 		for (ToolListener<T> listener : listeners) {
 			switch (eventType) {
 			case AFTER_INIT_CLI_OPTIONS:

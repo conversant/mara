@@ -45,7 +45,7 @@ public class AvroWordCountReducer extends
 	@AvroNamedOutput(record = AvroExample.class)
 	private AvroMultipleOutputs avroMultiOut;
 
-	private AvroKey<AvroExample> aKey = new AvroKey<AvroExample>();
+	private final AvroKey<AvroExample> aKey = new AvroKey<>();
 
 	@Override
 	protected void reduce(Text key, Iterable<LongWritable> values, Context context)

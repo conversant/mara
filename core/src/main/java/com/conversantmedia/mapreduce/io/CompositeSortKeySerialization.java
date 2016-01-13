@@ -79,7 +79,7 @@ public class CompositeSortKeySerialization<G extends WritableComparable<G>, S ex
 	public Serializer<CompositeSortKey<G, S>> getSerializer(
 			Class<CompositeSortKey<G, S>> arg0) {
 		if (serializer == null) {
-			serializer = new CompositeSortKeySerializer<G, S>();
+			serializer = new CompositeSortKeySerializer<>();
 		}
 		return serializer;
 	}
@@ -107,10 +107,10 @@ public class CompositeSortKeySerialization<G extends WritableComparable<G>, S ex
 		job.setSortComparatorClass(CompositeSortKey.NaturalSortComparator.class);
 
 		// Now setup the serialization by registering with the framework.
-		Collection<String> serializations = new ArrayList<String>();
+		Collection<String> serializations = new ArrayList<>();
 		serializations.add(CompositeSortKeySerialization.class.getName());
 		serializations.addAll(job.getConfiguration().getStringCollection("io.serializations"));
-		job.getConfiguration().setStrings("io.serializations", serializations.toArray(new String[]{}));
+		job.getConfiguration().setStrings("io.serializations", serializations.toArray(new String[serializations.size()]));
 
 	}
 
@@ -153,8 +153,8 @@ public class CompositeSortKeySerialization<G extends WritableComparable<G>, S ex
 
 		private DataInputStream in;
 
-		private Class<G> groupKeyClass;
-		private Class<S> sortKeyClass;
+		private final Class<G> groupKeyClass;
+		private final Class<S> sortKeyClass;
 
 		public CompositeSortKeyDeserializer(Class<G> groupKeyClass, Class<S> sortKeyClass) {
 			this.groupKeyClass = groupKeyClass;
@@ -165,7 +165,7 @@ public class CompositeSortKeySerialization<G extends WritableComparable<G>, S ex
 		public CompositeSortKey<G, S> deserialize(CompositeSortKey<G, S> reuse)
 				throws IOException {
 			if (reuse == null) {
-				reuse = new CompositeSortKey<G, S>();
+				reuse = new CompositeSortKey<>();
 			}
 
 			if (reuse.getGroupKey() == null) {

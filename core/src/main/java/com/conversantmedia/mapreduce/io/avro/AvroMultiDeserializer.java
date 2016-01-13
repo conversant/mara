@@ -43,20 +43,20 @@ import org.apache.hadoop.io.serializer.Deserializer;
 public class AvroMultiDeserializer<T> extends Configured implements
 		Deserializer<AvroMultiWrapper<T>> {
 
-	private Map<Integer, DatumReader<T>> readers;
+	private final Map<Integer, DatumReader<T>> readers;
 
 	private BinaryDecoder decoder;
 
 	public AvroMultiDeserializer(Configuration conf) {
 		super(conf);
-		readers = new HashMap<Integer, DatumReader<T>>();
+		readers = new HashMap<>();
 	}
 
 	@Override
 	public AvroMultiWrapper<T> deserialize(AvroMultiWrapper<T> wrapper)
 			throws IOException {
 		if (wrapper == null) {
-			wrapper = new AvroMultiWrapper<T>();
+			wrapper = new AvroMultiWrapper<>();
 		}
 
 		// Read in the first byte - the schema index
@@ -72,7 +72,7 @@ public class AvroMultiDeserializer<T> extends Configured implements
 		DatumReader<T> reader = readers.get(schemaIndex);
 		if (reader == null) {
 			Schema schema = MultiSchemaAvroSerialization.getSchemaAt(getConf(), schemaIndex);
-			reader = new ReflectDatumReader<T>(schema);
+			reader = new ReflectDatumReader<>(schema);
 			readers.put(schemaIndex, reader);
 		}
 		return reader;
