@@ -12,14 +12,14 @@ See the full [wiki documentation](https://github.com/conversant/mara/wiki/) for 
 <dependency>
    <groupId>com.conversantmedia</groupId>
    <artifactId>mara-core</artifactId>
-   <version>0.9.2</version>
+   <version>0.9.6</version>
 </dependency>
 
 <!-- test dependency -->
 <dependency>
    <groupId>com.conversantmedia</groupId>
    <artifactId>mara-test</artifactId>
-   <version>0.9.2</version>
+   <version>0.9.6</version>
    <scope>test</scope>
 </dependency>
 ```
